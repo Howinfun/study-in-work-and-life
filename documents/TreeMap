@@ -6,141 +6,141 @@
 5、从任意一个节点到每个叶子节点的所有路径都包含相同数目的黑色节点。
 
 public V put(K key, V value) {
-		// 获取当前红黑树的根节点
-        Entry<K,V> t = root;
-		// 判断根节点是否为空，如果为空的话直接将新增节点作为根节点。
-        if (t == null) {
-            compare(key, key); // type (and possibly null) check
-			// new Entry-> 节点的color默认为black
-            root = new Entry<>(key, value, null);
-            size = 1;
-            modCount++;
-            return null;
-        }
-		// 如果根节点不为空，则使用Comparator进行比较
-        int cmp;
-        Entry<K,V> parent;
-        // split comparator and comparable paths
-        Comparator<? super K> cpr = comparator;
-		// 是否有自定义Comparator
-        if (cpr != null) {
-            do {
-				// 父节点一开始为根节点
-                parent = t;
-                cmp = cpr.compare(key, t.key);
-				// 如果插入节点比当前父节点的值要小，往红黑树的左边继续遍历，t的左节点作为下个父节点
-                if (cmp < 0)
-                    t = t.left;
-				// 如果插入节点比当前父节点的值要大，往红黑树的右边继续遍历，t的右节点作为下个父节点
-                else if (cmp > 0)
-                    t = t.right;
-				// 如果值相等，则不进行插入操作，直接返回值
-                else
-                    return t.setValue(value);
-			// 下一个父节点不为空，则继续循环
-            } while (t != null);
-        }
-		// 如果没有自定义Comparator，则使用默认的Comparator
-        else {
-            if (key == null)
-                throw new NullPointerException();
-            @SuppressWarnings("unchecked")
-                Comparable<? super K> k = (Comparable<? super K>) key;
-			// 和上面的遍历一样
-            do {
-                parent = t;
-                cmp = k.compareTo(t.key);
-                if (cmp < 0)
-                    t = t.left;
-                else if (cmp > 0)
-                    t = t.right;
-                else
-                    return t.setValue(value);
-            } while (t != null);
-        }
-		// 创建节点
-        Entry<K,V> e = new Entry<>(key, value, parent);
-		// 如果是小于的，则放在父节点的左边
-        if (cmp < 0)
-            parent.left = e;
-		// 如果是大于的，放在父节点的右边
-        else
-            parent.right = e;
-		// 根据红黑树规则进行调节【注意：会将插入节点的颜色设置为红色再进行调节】
-        fixAfterInsertion(e);
-        size++;
+    // 获取当前红黑树的根节点
+    Entry<K,V> t = root;
+    // 判断根节点是否为空，如果为空的话直接将新增节点作为根节点。
+    if (t == null) {
+        compare(key, key); // type (and possibly null) check
+        // new Entry-> 节点的color默认为black
+        root = new Entry<>(key, value, null);
+        size = 1;
         modCount++;
         return null;
     }
+    // 如果根节点不为空，则使用Comparator进行比较
+    int cmp;
+    Entry<K,V> parent;
+    // split comparator and comparable paths
+    Comparator<? super K> cpr = comparator;
+    // 是否有自定义Comparator
+    if (cpr != null) {
+        do {
+            // 父节点一开始为根节点
+            parent = t;
+            cmp = cpr.compare(key, t.key);
+            // 如果插入节点比当前父节点的值要小，往红黑树的左边继续遍历，t的左节点作为下个父节点
+            if (cmp < 0)
+                t = t.left;
+            // 如果插入节点比当前父节点的值要大，往红黑树的右边继续遍历，t的右节点作为下个父节点
+            else if (cmp > 0)
+                t = t.right;
+            // 如果值相等，则不进行插入操作，直接返回值
+            else
+                return t.setValue(value);
+        // 下一个父节点不为空，则继续循环
+        } while (t != null);
+    }
+    // 如果没有自定义Comparator，则使用默认的Comparator
+    else {
+        if (key == null)
+            throw new NullPointerException();
+        @SuppressWarnings("unchecked")
+            Comparable<? super K> k = (Comparable<? super K>) key;
+        // 和上面的遍历一样
+        do {
+            parent = t;
+            cmp = k.compareTo(t.key);
+            if (cmp < 0)
+                t = t.left;
+            else if (cmp > 0)
+                t = t.right;
+            else
+                return t.setValue(value);
+        } while (t != null);
+    }
+    // 创建节点
+    Entry<K,V> e = new Entry<>(key, value, parent);
+    // 如果是小于的，则放在父节点的左边
+    if (cmp < 0)
+        parent.left = e;
+    // 如果是大于的，放在父节点的右边
+    else
+        parent.right = e;
+    // 根据红黑树规则进行调节【注意：会将插入节点的颜色设置为红色再进行调节】
+    fixAfterInsertion(e);
+    size++;
+    modCount++;
+    return null;
+}
 
 
-	private void fixAfterInsertion(Entry<K,V> x) {
-		// 将插入节点的颜色设置为红色
-        x.color = RED;
-		// 只要x不为空，不是根节点，x的父节点的颜色等于red就一直循环
-        while (x != null && x != root && x.parent.color == RED) {
-			// 如果父节点是左节点
-            if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
-				// 取父节点的兄弟节点(即祖父的右子节点)
-                Entry<K,V> y = rightOf(parentOf(parentOf(x)));
-				// 如果父节点的兄弟节点不为空且是空色
-                if (colorOf(y) == RED) {
-					// 父节点设置为黑色
-                    setColor(parentOf(x), BLACK);
-					// 父节点的兄弟节点设置为黑色
-                    setColor(y, BLACK);
-					// 设置祖父节点为红色
-                    setColor(parentOf(parentOf(x)), RED);
-					// 将当前节点重新设置为祖父节点
-                    x = parentOf(parentOf(x));
-				// 如果父节点的兄弟节点为空或者为黑色
-                } else {
-					// 当前节点是否为右节点
-                    if (x == rightOf(parentOf(x))) {
-						// 将当前节点重新设置为父节点
-                        x = parentOf(x);
-						// 当前节点进行左旋操作
-                        rotateLeft(x);
-                    }
-					// 设置父节点为黑色
-                    setColor(parentOf(x), BLACK);
-					// 设置祖父节点为红色
-                    setColor(parentOf(parentOf(x)), RED);
-					// 祖父节点进行右旋操作
-                    rotateRight(parentOf(parentOf(x)));
-                }
-			// 如果父节点是右节点
+private void fixAfterInsertion(Entry<K,V> x) {
+    // 将插入节点的颜色设置为红色
+    x.color = RED;
+    // 只要x不为空，不是根节点，x的父节点的颜色等于red就一直循环
+    while (x != null && x != root && x.parent.color == RED) {
+        // 如果父节点是左节点
+        if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
+            // 取父节点的兄弟节点(即祖父的右子节点)
+            Entry<K,V> y = rightOf(parentOf(parentOf(x)));
+            // 如果父节点的兄弟节点不为空且是空色
+            if (colorOf(y) == RED) {
+                // 父节点设置为黑色
+                setColor(parentOf(x), BLACK);
+                // 父节点的兄弟节点设置为黑色
+                setColor(y, BLACK);
+                // 设置祖父节点为红色
+                setColor(parentOf(parentOf(x)), RED);
+                // 将当前节点重新设置为祖父节点
+                x = parentOf(parentOf(x));
+            // 如果父节点的兄弟节点为空或者为黑色
             } else {
-			// 取父节点的兄弟节点(即祖父的左子节点)
-                Entry<K,V> y = leftOf(parentOf(parentOf(x)));
-				// 如果父节点的兄弟节点不为空且是空色
-                if (colorOf(y) == RED) {
-					// 设置父节点为黑色
-                    setColor(parentOf(x), BLACK);
-					// 设置父亲的兄弟节点为黑色
-                    setColor(y, BLACK);
-					// 设置祖父节点为红色
-                    setColor(parentOf(parentOf(x)), RED);
-					// 将当前节点重新设置为祖父节点
-                    x = parentOf(parentOf(x));
-				// 如果父节点的兄弟节点为空或者为黑色
-                } else {
-					// 当前节点是否为左节点
-                    if (x == leftOf(parentOf(x))) {
-						// 将当前节点重新设置为父节点
-                        x = parentOf(x);
-						// 当前节点进行右旋操作
-                        rotateRight(x);
-                    }
-					// 设置父节点为黑色
-                    setColor(parentOf(x), BLACK);
-					// 设置祖父节点为红色
-                    setColor(parentOf(parentOf(x)), RED);
-					// 祖父节点进行左旋操作
-                    rotateLeft(parentOf(parentOf(x)));
+                // 当前节点是否为右节点
+                if (x == rightOf(parentOf(x))) {
+                    // 将当前节点重新设置为父节点
+                    x = parentOf(x);
+                    // 当前节点进行左旋操作
+                    rotateLeft(x);
                 }
+                // 设置父节点为黑色
+                setColor(parentOf(x), BLACK);
+                // 设置祖父节点为红色
+                setColor(parentOf(parentOf(x)), RED);
+                // 祖父节点进行右旋操作
+                rotateRight(parentOf(parentOf(x)));
+            }
+        // 如果父节点是右节点
+        } else {
+        // 取父节点的兄弟节点(即祖父的左子节点)
+            Entry<K,V> y = leftOf(parentOf(parentOf(x)));
+            // 如果父节点的兄弟节点不为空且是空色
+            if (colorOf(y) == RED) {
+                // 设置父节点为黑色
+                setColor(parentOf(x), BLACK);
+                // 设置父亲的兄弟节点为黑色
+                setColor(y, BLACK);
+                // 设置祖父节点为红色
+                setColor(parentOf(parentOf(x)), RED);
+                // 将当前节点重新设置为祖父节点
+                x = parentOf(parentOf(x));
+            // 如果父节点的兄弟节点为空或者为黑色
+            } else {
+                // 当前节点是否为左节点
+                if (x == leftOf(parentOf(x))) {
+                    // 将当前节点重新设置为父节点
+                    x = parentOf(x);
+                    // 当前节点进行右旋操作
+                    rotateRight(x);
+                }
+                // 设置父节点为黑色
+                setColor(parentOf(x), BLACK);
+                // 设置祖父节点为红色
+                setColor(parentOf(parentOf(x)), RED);
+                // 祖父节点进行左旋操作
+                rotateLeft(parentOf(parentOf(x)));
             }
         }
-		// 根节点设置为黑色
-        root.color = BLACK;
     }
+    // 根节点设置为黑色
+    root.color = BLACK;
+}

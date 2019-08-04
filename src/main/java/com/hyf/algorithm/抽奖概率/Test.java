@@ -14,22 +14,16 @@ public class Test {
         Integer hasThree = 0;
         for (int i = 0; i < 100000000; i++) {
             // 一等奖概率
-            Integer one = RandomUtil.randomInt(1,100);
-            if (one>=1 && one <=10){
+            Integer random = RandomUtil.randomInt(1,100);
+            if (random>=1 && random <=10){
                 //System.out.println("中奖一等奖");
                 hasOne ++;
-            }else{
-                Integer two = RandomUtil.randomInt(11,100);
-                if (two>=11 && two<=30){
+            }else if (random>=11 && random<=30){
                     //System.out.println("中间二等奖");
                     hasTwo++;
-                }else{
-                    Integer three = RandomUtil.randomInt(31,100);
-                    if (three>=31 && three<=100){
+            }else if (random>=31 && random<=100){
                         //System.out.println("中奖三等奖");
                         hasThree++;
-                    }
-                }
             }
         }
         System.out.println("一等奖中奖次数："+hasOne);
