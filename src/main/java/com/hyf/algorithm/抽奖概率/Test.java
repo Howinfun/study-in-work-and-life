@@ -12,22 +12,25 @@ public class Test {
         Integer hasOne = 0;
         Integer hasTwo = 0;
         Integer hasThree = 0;
+        long start = System.currentTimeMillis();
         for (int i = 0; i < 100000000; i++) {
             // 一等奖概率
             Integer random = RandomUtil.randomInt(1,100);
             if (random>=1 && random <=10){
                 //System.out.println("中奖一等奖");
-                hasOne ++;
+                //hasOne ++;
             }else if (random>=11 && random<=30){
                     //System.out.println("中间二等奖");
-                    hasTwo++;
+                    //hasTwo++;
             }else if (random>=31 && random<=100){
                         //System.out.println("中奖三等奖");
-                        hasThree++;
+                        //hasThree++;
             }
         }
-        System.out.println("一等奖中奖次数："+hasOne);
+        /*System.out.println("一等奖中奖次数："+hasOne);
         System.out.println("二等奖中奖次数："+hasTwo);
-        System.out.println("三等奖中奖次数："+hasThree);
+        System.out.println("三等奖中奖次数："+hasThree);*/
+        long end = System.currentTimeMillis();
+        System.out.println("耗时："+(end-start));
     }
 }

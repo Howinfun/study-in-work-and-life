@@ -18,6 +18,7 @@ public class TestTreeMap{
         Integer hasOne = 0;
         Integer hasTwo = 0;
         Integer hasThree = 0;
+        long start = System.currentTimeMillis();
         for (int i = 0; i < 100000000; i++) {
             /**
              * 需求：转盘抽奖中奖率：一等奖10%  二等奖20%  三等奖70%
@@ -33,17 +34,20 @@ public class TestTreeMap{
             Double random = treeMap.lastKey()*Math.random();
             // 因为随机数Math*random()是大于等于0.0且小于1.0
             SortedMap<Double,String> resultMap = treeMap.tailMap(random,false);
+            //System.out.println("中奖："+resultMap.get(resultMap.firstKey()));
             // 因为tailMap返回的结果是升序排序的，所以我们取第一个即可
-            if ("三等奖".equals(resultMap.get(resultMap.firstKey()))){
+            /*if ("三等奖".equals(resultMap.get(resultMap.firstKey()))){
                 hasThree++;
             }else if ("二等奖".equals(resultMap.get(resultMap.firstKey()))){
                 hasTwo++;
             }else if ("一等奖".equals(resultMap.get(resultMap.firstKey()))){
                 hasOne++;
-            }
+            }*/
         }
-        System.out.println("一等奖："+hasOne);
+        /*System.out.println("一等奖："+hasOne);
         System.out.println("二等奖："+hasTwo);
-        System.out.println("三等奖："+hasThree);
+        System.out.println("三等奖："+hasThree);*/
+        long end = System.currentTimeMillis();
+        System.out.println("耗时："+(end-start));
     }
 }
