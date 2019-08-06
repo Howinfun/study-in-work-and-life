@@ -1,4 +1,4 @@
-package com.hyf.algorithm.抽奖概率;
+package com.hyf.algorithm.抽奖概率.demo;
 
 /**
  * @author Howinfun

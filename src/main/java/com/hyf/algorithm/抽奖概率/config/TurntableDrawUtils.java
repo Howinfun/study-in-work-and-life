@@ -1,9 +1,9 @@
-package com.hyf.algorithm.config;
+package com.hyf.algorithm.抽奖概率.config;
 
-import com.hyf.algorithm.entity.TurntableDraw;
-import com.hyf.algorithm.entity.TurntablePrize;
-import com.hyf.algorithm.entity.TurntableRecord;
-import com.hyf.algorithm.mapper.TurntableMapper;
+import com.hyf.algorithm.抽奖概率.entity.TurntableDraw;
+import com.hyf.algorithm.抽奖概率.entity.TurntablePrize;
+import com.hyf.algorithm.抽奖概率.entity.TurntableRecord;
+import com.hyf.algorithm.抽奖概率.mapper.TurntableMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,30 +17,32 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 
 /**
  * @author Howinfun
- * @desc
+ * @desc 抽奖工具，单例
  * @date 2019/8/5
  */
 @Component
 @Scope(SCOPE_SINGLETON)
-public class TurntableDrawInit {
+public class TurntableDrawUtils {
 
     @Autowired
     private TurntableMapper turntableMapper;
-
+    /** 转盘抽奖TreeMap，因为TurntableDrawInit是单例的，所以treeMap全局只有一份 */
     private final TreeMap<Double,TreeMap<Double,TurntablePrize>> treeMap = new TreeMap<>();
+    /** 私有化构造函数 */
+    private TurntableDrawUtils(){}
 
-    private TurntableDrawInit(){}
-
+    /**
+     * 初始化
+     */
     @PostConstruct
     public void init(){
         List<TurntableDraw> drawList = turntableMapper.getDraw();
         if (drawList != null && drawList.size() > 0){
+            // 遍历奖项
             for (TurntableDraw draw : drawList) {
-                System.out.println();
-                System.out.println("奖项："+draw);
                 TreeMap<Double,TurntablePrize> drawTreeMap = new TreeMap<>();
                 List<TurntablePrize> prizeList = turntableMapper.getPrizeByDraw(draw.getId());
-                System.out.print("奖品：");
+                // 遍历奖品
                 for (TurntablePrize prize : prizeList) {
                     System.out.print(prize);
                     drawTreeMap.put(prize.getWeight(),prize);
@@ -52,8 +54,9 @@ public class TurntableDrawInit {
 
     public TurntablePrize turntableDraw(String phone){
         TurntablePrize prize;
-        // 如果还有奖项则继续抽奖
+        // 加锁，防止并发问题
         synchronized (this.treeMap){
+            // 如果还有奖项则进行抽奖
             if (treeMap.size() > 0){
                 // 奖项随机数
                 Double random = treeMap.lastKey()*Math.random();

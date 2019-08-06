@@ -1,14 +1,13 @@
-package com.hyf.algorithm.mapper;
+package com.hyf.algorithm.抽奖概率.mapper;
 
-import com.hyf.algorithm.entity.TurntableDraw;
-import com.hyf.algorithm.entity.TurntablePrize;
-import com.hyf.algorithm.entity.TurntableRecord;
+import com.hyf.algorithm.抽奖概率.entity.TurntableDraw;
+import com.hyf.algorithm.抽奖概率.entity.TurntablePrize;
+import com.hyf.algorithm.抽奖概率.entity.TurntableRecord;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -18,7 +17,6 @@ import java.util.List;
  * @date 2019/8/5
  */
 @Mapper
-@Component
 public interface TurntableMapper {
 
     @Select("select * from turntable_draw where prize_num >0")

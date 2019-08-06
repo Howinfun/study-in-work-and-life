@@ -1,4 +1,4 @@
-package com.hyf.algorithm.query;
+package com.hyf.algorithm.抽奖概率.query;
 
 import lombok.Data;
 

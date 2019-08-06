@@ -1,6 +1,6 @@
-package com.hyf.algorithm.service;
+package com.hyf.algorithm.抽奖概率.service;
 
-import com.hyf.algorithm.entity.TurntablePrize;
+import com.hyf.algorithm.抽奖概率.entity.TurntablePrize;
 
 /**
  * @author Howinfun

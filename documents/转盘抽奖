@@ -1,0 +1,271 @@
+背景：
+        公司每次节日都会有各种活动，其中转盘抽奖肯定是必不可少的。以前这些都是找其他公司做的小程序小游戏，现在招了个前端专门搞小程序了，那么之后肯定我们后端就得提供接口给他们用了。转盘抽奖，最常见的就是使用权重随机算法，其实很多地方会使用到这算法，例如路由的负载均衡、dubbo的服务调用等等。
+
+ 
+
+需求与实现：
+        假如现在有三个奖项，一等奖中奖率10%，二等奖中奖率20%，三等奖中奖率70%。我们可以将奖项分成100等份，然后从0-99中抽取一个随机数，在[0,10)范围内则是中一等奖、在[10,30)范围内是中二等奖、在[30,100)范围内则是中三等奖，刚好是(10-0)/100%+(30-10)/100%+(100-30)%=100%。到这里，我们可以发现，我们使用if判断就可以搞定这个需求，但是呢，还有一个数据结构更适合这个需求，而且不用多余的if判断代码，性能还非常的不错，那就是TreeMap了，我们最主要是利用它的红黑树特性，在代码实现后会简单介绍TreeMap，特别是put方法。
+
+ 
+
+代码实现：
+        这里将展示两种实现方法，一种是多个if判断，一个是使用TreeMap。
+
+        实现一：
+
+package com.hyf.algorithm.抽奖概率;
+
+import cn.hutool.core.util.RandomUtil;
+
+/**
+ * @author Howinfun
+ * @desc 抽奖概率
+ * @date 2019/8/2
+ */
+public class Test {
+    public static void main(String[] args) {
+        Integer hasOne = 0;
+        Integer hasTwo = 0;
+        Integer hasThree = 0;
+        for (int i = 0; i < 100000000; i++) {
+            // 一等奖概率
+            Integer random = RandomUtil.randomInt(1,100);
+            if (random>=1 && random <=10){
+                //System.out.println("中奖一等奖");
+                hasOne ++;
+            }else if (random>=11 && random<=30){
+                    //System.out.println("中间二等奖");
+                    hasTwo++;
+            }else if (random>=31 && random<=100){
+                        //System.out.println("中奖三等奖");
+                        hasThree++;
+            }
+        }
+        System.out.println("一等奖中奖次数："+hasOne);
+        System.out.println("二等奖中奖次数："+hasTwo);
+        System.out.println("三等奖中奖次数："+hasThree);
+    }
+}
+        实现二：
+
+package com.hyf.algorithm.抽奖概率;
+
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+/**
+ * @author Howinfun
+ * @desc
+ * @date 2019/8/2
+ */
+public class TestTreeMap{
+    public static void main(String[] args) {
+        test();
+    }
+
+
+    private static void test(){
+        Integer hasOne = 0;
+        Integer hasTwo = 0;
+        Integer hasThree = 0;
+        for (int i = 0; i < 100000000; i++) {
+            /**
+             * 需求：转盘抽奖中奖率：一等奖10%  二等奖20%  三等奖70%
+             * 使用权重随机算法。我们可以将中奖一共看成100份，然后[0,10)是一等奖，[10,30)是二等奖，[30,100)是三等奖
+             * 刚好10-0/100是10%，30-10/100是20%  100-30/100是70%
+             * 接下来我们利用TreeMap来完成
+             */
+            TreeMap<Double,String> treeMap = new TreeMap();
+            treeMap.put(10d,"一等奖");
+            treeMap.put(30d,"二等奖");
+            treeMap.put(100d,"三等奖");
+            // 随机数
+            Double random = treeMap.lastKey()*Math.random();
+            // 因为随机数Math*random()是大于等于0.0且小于1.0
+            SortedMap<Double,String> resultMap = treeMap.tailMap(random,false);
+            // 因为tailMap返回的结果是升序排序的，所以我们取第一个即可
+            if ("三等奖".equals(resultMap.get(resultMap.firstKey()))){
+                hasThree++;
+            }else if ("二等奖".equals(resultMap.get(resultMap.firstKey()))){
+                hasTwo++;
+            }else if ("一等奖".equals(resultMap.get(resultMap.firstKey()))){
+                hasOne++;
+            }
+        }
+        System.out.println("一等奖："+hasOne);
+        System.out.println("二等奖："+hasTwo);
+        System.out.println("三等奖："+hasThree);
+    }
+
+}
+TreeMap&红黑树介绍：
+        TreeMap在JDK的官方介绍是：
+
+ * A Red-Black tree based {@link NavigableMap} implementation.
+ * The map is sorted according to the {@linkplain Comparable natural
+ * ordering} of its keys, or by a {@link Comparator} provided at map
+ * creation time, depending on which constructor is used.
+       大概意思是：TreeMap是基于红黑树实现的，根据默认比较器会对其键进行排序，当然了，你也可以根据自己的需求自定义排序器（个人理解：如果key是数值使用默认的即可，由小到大排序。如果key是自定义对象，那么自定义比较器是必须的，不能少，而且自定义对象可以实现Comparable接口重写compareTo方法）。
+
+        因为接下来分析TreeMap的put方法需要先了解红黑树的特性，我们这里就简单介绍一下红黑树的五个特性：
+
+根节点是黑色的
+每个节点是红色或者黑色的。
+如果一个节点是红色的，那么它的子节点必须是黑色的。
+每个叶子节点(NIL)是黑色的。
+从任务一个节点到每个叶子节点的所有路径都包含相同数目的黑色节点。
+下面附上经典红黑树例子： 
+
+
+
+源码分析： 
+        之所以我们使用TreeMap不再需要多个if判断，是因为TreeMap的put()方法会使用Comparetor比较器来对每个新增的key进行排序，而我们使用的key是Double，使用默认的比较器即可，排序是从小到大排。然后可以使用tailMap()方法会根据指定key来找出比这个key大的所有key。
+
+        put方法源码分析：
+
+public V put(K key, V value) {
+    // 获取当前红黑树的根节点
+    Entry<K,V> t = root;
+    // 判断根节点是否为空，如果为空的话直接将新增节点作为根节点。
+    if (t == null) {
+        compare(key, key); // type (and possibly null) check
+        // new Entry-> 节点的color默认为black
+        root = new Entry<>(key, value, null);
+        size = 1;
+        modCount++;
+        return null;
+    }
+    // 如果根节点不为空，则使用Comparator进行比较
+    int cmp;
+    Entry<K,V> parent;
+    // split comparator and comparable paths
+    Comparator<? super K> cpr = comparator;
+    // 是否有自定义Comparator
+    if (cpr != null) {
+        do {
+            // 父节点一开始为根节点
+            parent = t;
+            cmp = cpr.compare(key, t.key);
+            // 如果插入节点比当前父节点的值要小，往红黑树的左边继续遍历，t的左节点作为下个父节点
+            if (cmp < 0)
+                t = t.left;
+            // 如果插入节点比当前父节点的值要大，往红黑树的右边继续遍历，t的右节点作为下个父节点
+            else if (cmp > 0)
+                t = t.right;
+            // 如果值相等，则不进行插入操作，直接返回值
+            else
+                return t.setValue(value);
+        // 下一个父节点不为空，则继续循环
+        } while (t != null);
+    }
+    // 如果没有自定义Comparator，则使用默认的Comparator
+    else {
+        if (key == null)
+            throw new NullPointerException();
+        @SuppressWarnings("unchecked")
+            Comparable<? super K> k = (Comparable<? super K>) key;
+        // 和上面的遍历一样
+        do {
+            parent = t;
+            cmp = k.compareTo(t.key);
+            if (cmp < 0)
+                t = t.left;
+            else if (cmp > 0)
+                t = t.right;
+            else
+                return t.setValue(value);
+        } while (t != null);
+    }
+    // 创建节点
+    Entry<K,V> e = new Entry<>(key, value, parent);
+    // 如果是小于的，则放在父节点的左边
+    if (cmp < 0)
+        parent.left = e;
+    // 如果是大于的，放在父节点的右边
+    else
+        parent.right = e;
+    // 根据红黑树规则进行调节【注意：会将插入节点的颜色设置为红色再进行调节】
+    fixAfterInsertion(e);
+    size++;
+    modCount++;
+    return null;
+}
+        红黑树调节方法源码分析：
+
+private void fixAfterInsertion(Entry<K,V> x) {
+    // 将插入节点的颜色设置为红色
+    x.color = RED;
+    // 只要x不为空，不是根节点，x的父节点的颜色等于red就一直循环
+    while (x != null && x != root && x.parent.color == RED) {
+        // 如果父节点是左节点
+        if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
+            // 取父节点的兄弟节点(即祖父的右子节点)
+            Entry<K,V> y = rightOf(parentOf(parentOf(x)));
+            // 如果父节点的兄弟节点不为空且是空色
+            if (colorOf(y) == RED) {
+                // 父节点设置为黑色
+                setColor(parentOf(x), BLACK);
+                // 父节点的兄弟节点设置为黑色
+                setColor(y, BLACK);
+                // 设置祖父节点为红色
+                setColor(parentOf(parentOf(x)), RED);
+                // 将当前节点重新设置为祖父节点
+                x = parentOf(parentOf(x));
+            // 如果父节点的兄弟节点为空或者为黑色
+            } else {
+                // 当前节点是否为右节点
+                if (x == rightOf(parentOf(x))) {
+                    // 将当前节点重新设置为父节点
+                    x = parentOf(x);
+                    // 当前节点进行左旋操作
+                    rotateLeft(x);
+                }
+                // 设置父节点为黑色
+                setColor(parentOf(x), BLACK);
+                // 设置祖父节点为红色
+                setColor(parentOf(parentOf(x)), RED);
+                // 祖父节点进行右旋操作
+                rotateRight(parentOf(parentOf(x)));
+            }
+        // 如果父节点是右节点
+        } else {
+        // 取父节点的兄弟节点(即祖父的左子节点)
+            Entry<K,V> y = leftOf(parentOf(parentOf(x)));
+            // 如果父节点的兄弟节点不为空且是空色
+            if (colorOf(y) == RED) {
+                // 设置父节点为黑色
+                setColor(parentOf(x), BLACK);
+                // 设置父亲的兄弟节点为黑色
+                setColor(y, BLACK);
+                // 设置祖父节点为红色
+                setColor(parentOf(parentOf(x)), RED);
+                // 将当前节点重新设置为祖父节点
+                x = parentOf(parentOf(x));
+            // 如果父节点的兄弟节点为空或者为黑色
+            } else {
+                // 当前节点是否为左节点
+                if (x == leftOf(parentOf(x))) {
+                    // 将当前节点重新设置为父节点
+                    x = parentOf(x);
+                    // 当前节点进行右旋操作
+                    rotateRight(x);
+                }
+                // 设置父节点为黑色
+                setColor(parentOf(x), BLACK);
+                // 设置祖父节点为红色
+                setColor(parentOf(parentOf(x)), RED);
+                // 祖父节点进行左旋操作
+                rotateLeft(parentOf(parentOf(x)));
+            }
+        }
+    }
+    // 根节点设置为黑色
+    root.color = BLACK;
+}
+        最后是tailMap方法，我们只需要留意是返回升序的Map即可：
+
+ public NavigableMap<K,V> tailMap(K fromKey, boolean inclusive) {
+        return new AscendingSubMap<>(this,
+                                     false, fromKey, inclusive,
+                                     true,  null,    true);
+    }
