@@ -3,6 +3,7 @@ package com.hyf.algorithm.剑指offer;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class 从尾到头打印链表 {
     /** 成员变量，存放结果 **/
@@ -22,6 +23,26 @@ public class 从尾到头打印链表 {
         return this.arrayList;
     }
 
+    /**
+     * 利用栈的先进后出特性
+     * @param listNode
+     * @return
+     */
+    public ArrayList<Integer> printListFromTailToHead2(ListNode listNode) {
+        Stack<Integer> stack = new Stack<>();
+        if (listNode != null){
+            ListNode head = listNode;
+            while (head != null){
+                stack.push(head.val);
+                head = head.next;
+            }
+            while (!stack.empty()){
+                arrayList.add(stack.pop());
+            }
+        }
+        return this.arrayList;
+    }
+
     public static void main(String[] args) {
         ListNode n1 = new ListNode(1);
         ListNode n2 = new ListNode(2);
@@ -35,7 +56,7 @@ public class 从尾到头打印链表 {
         n4.setNext(n5);
         n5.setNext(n6);
         从尾到头打印链表 h = new 从尾到头打印链表();
-        System.out.println(h.printListFromTailToHead(n1));
+        System.out.println(h.printListFromTailToHead2(n1));
     }
 }
 @Data
