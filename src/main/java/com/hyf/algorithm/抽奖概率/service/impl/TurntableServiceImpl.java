@@ -1,8 +1,8 @@
-package com.hyf.algorithm.service.impl;
+package com.hyf.algorithm.抽奖概率.service.impl;
 
-import com.hyf.algorithm.config.TurntableDrawInit;
-import com.hyf.algorithm.entity.TurntablePrize;
-import com.hyf.algorithm.service.TurntableService;
+import com.hyf.algorithm.抽奖概率.config.TurntableDrawUtils;
+import com.hyf.algorithm.抽奖概率.entity.TurntablePrize;
+import com.hyf.algorithm.抽奖概率.service.TurntableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 public class TurntableServiceImpl implements TurntableService {
 
     @Autowired
-    private TurntableDrawInit drawInit;
+    private TurntableDrawUtils drawUtils;
 
     @Override
     public TurntablePrize turntableDraw(String phone) {
-        return drawInit.turntableDraw(phone);
+        return drawUtils.turntableDraw(phone);
     }
 }
