@@ -30,7 +30,32 @@ public class 裴波那契数列 {
         return result;
     }
 
+    /**
+     * 不要用递归，用迭代循环
+     * @param n
+     * @return
+     */
+    public static int fibonacci2(int n) {
+        if (n <= 0){
+            return 0;
+        }
+        if (n == 1 || n == 2){
+            return 1;
+        }
+        int pre = 1;
+        int prepre = 1;
+        int cur = 0;
+        for (int i = 3; i <= n; i++) {
+            cur = pre + prepre;
+            prepre = pre;
+            pre = cur;
+        }
+        return cur;
+    }
+
+
+
     public static void main(String[] args) {
-        System.out.println(fibonacci(6));
+        System.out.println(fibonacci2(6));
     }
 }
