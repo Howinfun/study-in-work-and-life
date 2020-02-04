@@ -142,3 +142,4 @@ public class 合并两个排序的链表 {
         head = merge2(head, head2);
         printList(head);
     }
+}

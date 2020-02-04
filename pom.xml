@@ -11,8 +11,8 @@
     <groupId>com.hyf</groupId>
     <artifactId>test-algorithm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>test-algorithm</name>
-    <description>算法练习</description>
+    <name>study-in-work-and-life</name>
+    <description>工作和生活中的学习</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -38,6 +38,12 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.0.0</version>
         </dependency>
 
         <dependency>
