@@ -53,8 +53,8 @@ private static HystrixProperty<String> getProperty(String propertyPrefix, Hystri
 
 (3)、org.springframework.cloud.openfeign.ribbon.CachingSpringLoadBalancerFactory#create
 
-		​创建Client，这里会判断对应ClientName的链接Client是否创建过，如果创建过复用之前的Client；
-		如果不存在则创建一个并且放入cache缓存。
+	创建Client，这里会判断对应ClientName的链接Client是否创建过，如果创建过复用之前的Client；
+	如果不存在则创建一个并且放入cache缓存。
 
 ```java
 public FeignLoadBalancer create(String clientName) {
@@ -79,7 +79,7 @@ public FeignLoadBalancer create(String clientName) {
 
 (5)、org.springframework.cloud.openfeign.ribbon.FeignLoadBalancer#execute
 
-	​	Feign的负载均衡器实现类。到这里我们可以看到，连接超时和读超时的配置都在这里：
+		Feign的负载均衡器实现类。到这里我们可以看到，连接超时和读超时的配置都在这里：
 		如果application.properties配置文件中的超时时间不为空，则使用配置的超时时间。
 		如果为空则使用默认值，而从FeignLoadBalancer的构造函数可以看到，默认值也是取的RibbonProperties的默认超时时间。
 
