@@ -13,9 +13,44 @@ public class ThreadBlocked {
     public static void main(String[] args) throws InterruptedException {
 
         /**
-         * Object的 wait()方法和 notify() 方法，是配合 synchronized 关键字使用的
+         * join 方法。调用其他线程的join方法，变味执行其他线程，自己进入WAITING状态，直到其他线程执行完毕
          */
         Thread thread1 = new Thread(()->{
+            int i = 0;
+            while (i <= 10){
+                ThreadUtil.sleep(1000);
+                System.out.println("线程1");
+                i++;
+            }
+        });
+
+        Thread thread2 = new Thread(()->{
+            try {
+                int i = 0;
+                while (i <= 10){
+                    ThreadUtil.sleep(1000);
+                    System.out.println("线程2");
+                    i++;
+                }
+                // 当调用线程1的 join方法，线程2会等待线程1执行完毕，才会继续执行
+                thread1.join(1000);
+                while (true){
+                    ThreadUtil.sleep(1000);
+                    System.out.println("线程2");
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        thread2.start();
+        ThreadUtil.sleep(3000);
+        thread1.start();
+
+
+        /**
+         * Object的 wait()方法和 notify() 方法，是配合 synchronized 关键字使用的
+         */
+        /*Thread thread1 = new Thread(()->{
 
             synchronized (lock){
                 int i = 0;
@@ -54,7 +89,7 @@ public class ThreadBlocked {
         });
         thread1.start();
         ThreadUtil.sleep(3000);
-        thread2.start();
+        thread2.start();*/
 
         /**
          * 线程阻塞：被另外的线程调用此线程的suspend方法，此时线程的状态为：TIMED_WAITING
