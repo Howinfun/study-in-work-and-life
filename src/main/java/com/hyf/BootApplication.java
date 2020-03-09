@@ -1,5 +1,6 @@
 package com.hyf;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2020/1/15
  */
 @SpringBootApplication
+@MapperScan(basePackages="com.hyf")
 public class BootApplication {
 
     public static void main(String[] args) {
