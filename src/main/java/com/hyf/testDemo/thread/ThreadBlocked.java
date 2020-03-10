@@ -12,10 +12,22 @@ public class ThreadBlocked {
     private final static Object lock = new Object();
     public static void main(String[] args) throws InterruptedException {
 
+
+        /**
+         * sleep 方法
+         */
+        Thread t = new Thread(()->{
+            while (true){
+                ThreadUtil.sleep(10000);
+            }
+        });
+        t.start();
+        ThreadUtil.sleep(1000);
+        System.out.println(t.getState());
         /**
          * join 方法。调用其他线程的join方法，变味执行其他线程，自己进入WAITING状态，直到其他线程执行完毕
          */
-        Thread thread1 = new Thread(()->{
+        /*Thread thread1 = new Thread(()->{
             int i = 0;
             while (i <= 10){
                 ThreadUtil.sleep(1000);
@@ -44,7 +56,7 @@ public class ThreadBlocked {
         });
         thread2.start();
         ThreadUtil.sleep(3000);
-        thread1.start();
+        thread1.start();*/
 
 
         /**
