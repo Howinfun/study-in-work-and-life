@@ -16,47 +16,47 @@ public class ThreadBlocked {
         /**
          * sleep 方法
          */
-        Thread t = new Thread(()->{
+        /*Thread t = new Thread(()->{
             while (true){
                 ThreadUtil.sleep(10000);
             }
         });
         t.start();
         ThreadUtil.sleep(1000);
-        System.out.println(t.getState());
+        System.out.println(t.getState());*/
         /**
          * join 方法。调用其他线程的join方法，变味执行其他线程，自己进入WAITING状态，直到其他线程执行完毕
          */
-        /*Thread thread1 = new Thread(()->{
-            int i = 0;
-            while (i <= 10){
-                ThreadUtil.sleep(1000);
-                System.out.println("线程1");
-                i++;
-            }
+        Thread thread1 = new Thread(()->{
+            //synchronized (lock){
+                while (true){
+                    ThreadUtil.sleep(1000);
+                    System.out.println("线程1");
+                }
+            //}
         });
 
         Thread thread2 = new Thread(()->{
             try {
-                int i = 0;
-                while (i <= 10){
-                    ThreadUtil.sleep(1000);
-                    System.out.println("线程2");
-                    i++;
-                }
-                // 当调用线程1的 join方法，线程2会等待线程1执行完毕，才会继续执行
-                thread1.join(1000);
-                while (true){
-                    ThreadUtil.sleep(1000);
-                    System.out.println("线程2");
-                }
+                //synchronized (lock){
+                    int i = 0;
+                    while (true){
+                        i++;
+                        ThreadUtil.sleep(1000);
+                        if (i == 10){
+                            // 当调用线程1的 join方法，线程2会等待线程1执行完毕，才会继续执行
+                            thread1.join();
+                        }
+                        System.out.println("线程2");
+                    }
+               // }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
         thread2.start();
-        ThreadUtil.sleep(3000);
-        thread1.start();*/
+        ThreadUtil.sleep(1000);
+        thread1.start();
 
 
         /**
