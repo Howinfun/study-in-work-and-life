@@ -9,7 +9,7 @@
 如何配置熔断超时：
 
 ```properties
-#Feign如何开启熔断
+#Feign如何开启熔断 Feigin默认不开启 hystrix 熔断
 feign.hystrix.enabled=true
 
 #是否开始超时熔断，如果为false，则熔断机制只在服务不可用时开启（spring-cloud-starter-openfeign中的HystrixCommandProperties默认为true）
@@ -35,6 +35,14 @@ protected HystrixCommandProperties(HystrixCommandKey key, HystrixCommandProperti
 private static HystrixProperty<String> getProperty(String propertyPrefix, HystrixCommandKey key, String instanceProperty, String builderOverrideValue, String defaultValue) {
         return HystrixPropertiesChainedProperty.forString().add(propertyPrefix + ".command." + key.name() + "." + instanceProperty, builderOverrideValue).add(propertyPrefix + ".command.default." + instanceProperty, defaultValue).build();
     }
+```
+
+### 2、Feign 配置超时时间
+
+```properties
+# 如果 config 后面跟着的是
+feign.client.config.default.connect-timeout=3000
+feign.client.config.default.read-timeout=3000
 ```
 
 
@@ -158,17 +166,15 @@ ribbon.ConnectTimeout=5000
 ribbon.ReadTimeout=5000
 ```
 
-
-
-
-
 6、Feign默认的client：feign.Client.Default
 
-7、feign.Client.Default#execute，http请求使用的是HttpURLConnection
+7、feign.Client.Default#execute，http请求使用的是HttpURLConnection。
 
 
 
-#### 更换Http请求框架：
+### 3、更换Http请求框架：
+
+> 在 openFeign 中，hystrix 的默认隔离策略为线程池（THREAD）
 
 更换Apache HttpClient框架：feign.httpclient.ApacheHttpClient
 
@@ -384,12 +390,14 @@ public class chargeServiceImpl implements chargeService{
      */
     @PostMapping("/order/addOrder")
     Result addOrder(@RequestBody Map<String, Object> map,String token){
-        this orderFeignClient(map,token);
+        this.orderFeignClient(map,token);
     }
 }
 ```
 
 **方法二**
+
+参考文章：https://blog.csdn.net/zhouyuhhu/article/details/103719825
 
 新建Configuration
 
@@ -433,6 +441,7 @@ public interface OrderFeignClient {
 ```
 
 配置文件新增配置：
+将 hystrix 的隔离策略改为信号量（semaphore），默认为线程池（Thread）。
 
 ```yaml
 hystrix:
@@ -442,4 +451,68 @@ hystrix:
         isolation:
           strategy: SEMAPHORE
 ```
+
+```properties
+hystrix.command.default.execution.isolation.strategy= SEMAPHORE
+```
+
+如果 hystrix 使用线程池管理请求的话，从主线程到发送基于 hystrix 的feign请求，已经是两个线程了。
+
+用户发起请求是一条线程，而基于 hystrix 和 openfeign 是另起一条线程发起 http 请求别的服务的，而使用 RequestContextHolder.getRequestAttributes() 其实利用 ThreadLocal 来获取当前线程里的请求的配置的。
+
+所以如果需要使用这个方法来获取用户请求的token，需要将隔离策略改为信号量。
+
+```java
+private static final ThreadLocal<RequestAttributes> requestAttributesHolder = new NamedThreadLocal("Request attributes");
+
+
+@Nullable
+public static RequestAttributes getRequestAttributes() {
+    RequestAttributes attributes = (RequestAttributes)requestAttributesHolder.get();
+    if (attributes == null) {
+        attributes = (RequestAttributes)inheritableRequestAttributesHolder.get();
+    }
+
+    return attributes;
+}
+```
+
+
+
+#### 两种隔离策略详解
+
+##### 一、示意图：
+
+左侧2/3是线程池资源隔离示意图，右侧1/3是信号量资源隔离示意图。
+
+![img](images/20170625183847332.jpg)
+
+
+
+##### 二、线程池隔离策略：
+
+不同服务通过使用不同线程池，彼此间将不受影响，达到隔离效果。
+
+**例子：**
+
+当用户请求服务A和服务I的时候，tomcat的线程(图中蓝色箭头标注)会将请求的任务交给服务A和服务I的内部线程池里面的线程(图中橘色箭头标注)来执行，tomcat的线程就可以去干别的事情去了，当服务A和服务I自己线程池里面的线程执行完任务之后，就会将调用的结果返回给tomcat的线程，从而实现资源的隔离，当有大量并发的时候，服务内部的线程池的数量就决定了整个服务的并发度，例如服务A的线程池大小为10个，当同时有12请求时，只会允许10个任务在执行，其他的任务被放在线程池队列中，或者是直接走降级服务，此时，如果服务A挂了，就不会造成大量的tomcat线程被服务A拖死，服务I依然能够提供服务。整个系统不会受太大的影响。
+
+##### 三、信号量隔离策略：
+
+线程隔离会带来线程开销，有些场景（比如无网络请求场景）可能会因为用开销换隔离得不偿失，为此hystrix提供了信号量隔离，当服务的并发数大于信号量阈值时将进入fallback。
+
+**例子：**
+
+信号量的资源隔离只是起到一个开关的作用，例如，服务X的信号量大小为10，那么同时只允许10个tomcat的线程(此处是tomcat的线程，而不是服务X的独立线程池里面的线程)来访问服务X，其他的请求就会被拒绝，从而达到限流保护的作用。
+
+##### 四、两者的比较
+
+|          | 线程池隔离               | 信号量隔离                                          |
+| -------- | ------------------------ | --------------------------------------------------- |
+| 线程     | 与调用线程非相同线程     | 与调用线程相同（容器的线程，如tomcat、jetty的线程） |
+| 开销     | 排队、调度、上下文开销等 | 无线程切换，开销低                                  |
+| 异步     | 支持                     | 不支持                                              |
+| 并发支持 | 支持（最大线程池大小）   | 支持（最大信号量上限）                              |
+
+
 
