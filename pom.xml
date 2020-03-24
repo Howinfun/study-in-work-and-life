@@ -73,16 +73,30 @@
             <artifactId>hutool-all</artifactId>
             <version>4.5.4</version>
         </dependency>
+
+
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-parent</artifactId>
-            <version>4.5.4</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <!--如果使用 lettuce 并且要使用连接池，需要自己引入连接池依赖
+                        <dependency>
+                            <groupId>org.apache.commons</groupId>
+                            <artifactId>commons-pool2</artifactId>
+                        </dependency>
+                    -->
+                    <groupId>io.lettuce</groupId>
+                    <artifactId>lettuce-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>4.5.4</version>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>
