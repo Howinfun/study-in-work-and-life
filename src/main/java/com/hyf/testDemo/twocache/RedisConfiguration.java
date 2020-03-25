@@ -15,8 +15,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Howinfun
@@ -47,11 +45,13 @@ public class RedisConfiguration {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer()))
                 // 不缓存null值
                 .disableCachingNullValues();
+        /*Redis 可以不在 RedisCacheManager 配置好对应的 cacheNames 属性。因为它的底层源码在根据 cacheNames 获取 Cache 时，如果为空，则自己创建。
         Set<String> cacheNames = new HashSet<>(1);
         cacheNames.add("user_cache");
+        cacheNames.add("user");*/
         RedisCacheManager redisCacheManager = RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)
-                .initialCacheNames(cacheNames)
+                //.initialCacheNames(cacheNames)
                 .transactionAware()
                 .build();
         return redisCacheManager;

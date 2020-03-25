@@ -19,6 +19,7 @@ public class MyCacheManager implements CacheManager {
 
     @Override
     public Cache getCache(String name) {
+        this.myCacheTemplate.setName(name);
         return this.myCacheTemplate;
     }
 

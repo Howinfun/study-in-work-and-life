@@ -30,7 +30,7 @@ public class MyCacheManagerConfiguration {
         MyCacheTemplate myCacheTemplate = new MyCacheTemplate();
         myCacheTemplate.setRedisCacheManager(redisCacheManager);
         myCacheTemplate.setEhCacheCacheManager(ehCacheCacheManager);
-        myCacheTemplate.setName("user_cache");
+        //myCacheTemplate.setName("user_cache");
         return myCacheTemplate;
     }
 }
