@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
  * @date 2020/3/25
  */
 @Repository
-@CacheConfig(cacheNames = {"users"})
+@CacheConfig(cacheNames = {"user_cache"})
 public interface UserMapper extends BaseMapper<User> {
 
     @Cacheable(key = "#id",unless = "#result == null")

@@ -3,6 +3,8 @@ package com.hyf.testDemo.redis;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author Howinfun
  * @desc
@@ -10,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @TableName("user")
-public class User {
+public class User implements Serializable {
 
     private Long id;
     private String name;

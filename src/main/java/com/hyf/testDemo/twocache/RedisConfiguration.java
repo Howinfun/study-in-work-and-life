@@ -1,8 +1,8 @@
-package com.hyf.testDemo.redis;
+package com.hyf.testDemo.twocache;
 
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -15,14 +15,15 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Howinfun
  * @desc
  * @date 2020/3/24
  */
-//@Configuration
-//@EnableCaching
+@Configuration
 public class RedisConfiguration {
 
     @Bean(name="jsonRedisTemplate")
@@ -35,7 +36,7 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public CacheManager redisCacheManager(RedisConnectionFactory connectionFactory){
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory){
 
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 // 60s缓存失效
@@ -46,9 +47,11 @@ public class RedisConfiguration {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer()))
                 // 不缓存null值
                 .disableCachingNullValues();
-
+        Set<String> cacheNames = new HashSet<>(1);
+        cacheNames.add("user_cache");
         RedisCacheManager redisCacheManager = RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(config)
+                .initialCacheNames(cacheNames)
                 .transactionAware()
                 .build();
         return redisCacheManager;
