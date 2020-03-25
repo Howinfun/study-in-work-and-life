@@ -1,34 +1,44 @@
 package com.hyf.testDemo.redis;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Howinfun
  * @desc
- * @date 2020/3/24
+ * @date 2020/3/25
  */
-@Mapper
-public interface UserMapper {
+@Repository
+@CacheConfig(cacheNames = {"users"})
+public interface UserMapper extends BaseMapper<User> {
 
-    @Select("select * from user")
-    List<User> queryUserList();
+    @Cacheable(key = "#id",unless = "#result == null")
+    User selectById(Long id);
 
-    @Select("select * from user where id = #{id}")
-    User queryUserById(@Param("id") Long id);
+    @CachePut(key = "#user.id", condition = "#user.name != null and #user.name != ''")
+    default User insert0(User user) {
+        // 插入
+        this.insert(user);
+        // 返回
+        return user;
+    }
 
-    @Insert("insert into user(name,age,phone) values(#{name},#{age},#{phone})")
-    Integer addUser(User user);
+    @CacheEvict(key = "#id")
+    int deleteById(Long id);
 
-    @Delete("delete from user where id = #{id}")
-    Integer delUser(@Param("id") Long id);
-
-    @Update("update user set name=#{name}, age=#{age}, phone=#{phone} where id = #{id}")
-    Integer updateUser(User user);
+    @Caching(
+            evict = {@CacheEvict(key = "#user.id", beforeInvocation = true)},
+            put = {@CachePut(key = "#user.id")}
+    )
+    default User updateUser0(User user){
+        // 更新
+        this.updateById(user);
+        // 返回
+        return user;
+    }
 }

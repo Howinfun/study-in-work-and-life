@@ -1,7 +1,7 @@
 package com.hyf.testDemo.redis;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hyf.algorithm.抽奖概率.common.Result;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,29 +26,29 @@ public class UserController {
     private UserMapper userMapper;
 
     @GetMapping("/user")
-    @Cacheable(value = "user")
     public Result queryUserList(){
-        return new Result(this.userMapper.queryUserList());
+        QueryWrapper<User> wrapper  = new QueryWrapper<>();
+        return new Result(this.userMapper.selectList(wrapper));
     }
 
     @GetMapping("/user/{id}")
     public Result queryUser(@PathVariable(name = "id") Long id){
-        return new Result(this.userMapper.queryUserById(id));
+        return new Result(this.userMapper.selectById(id));
     }
 
     @PostMapping("/user")
     public Result addUser(@RequestBody User user){
-        return new Result(this.userMapper.addUser(user));
+        return new Result(this.userMapper.insert0(user));
     }
 
     @DeleteMapping("/user/{id}")
     public Result delUser(@PathVariable(name = "id") Long id){
-        return new Result(this.userMapper.delUser(id));
+        return new Result(this.userMapper.deleteById(id));
     }
 
     @PutMapping("/user")
     public Result updateUser(@RequestBody User user){
-        return new Result(this.userMapper.updateUser(user));
+        return new Result(this.userMapper.updateUser0(user));
     }
 
 }

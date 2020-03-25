@@ -1,5 +1,6 @@
 package com.hyf.testDemo.redis;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Data;
  * @date 2020/3/24
  */
 @Data
+@TableName("user")
 public class User {
 
     private Long id;

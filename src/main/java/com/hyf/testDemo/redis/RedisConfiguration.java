@@ -56,7 +56,7 @@ public class RedisConfiguration {
         return redisCacheManager;
     }
     
-    @Bean
+    @Bean(name = "myKeyGenerator")
     public KeyGenerator keyGenerator(){
         // 缓存 key 的生成策略
         return new KeyGenerator() {
@@ -75,6 +75,24 @@ public class RedisConfiguration {
 
     // value值序列化方式
     private GenericJackson2JsonRedisSerializer valueSerializer(){
+        /**
+         * Jackson Default Typing 机制序列化 会在序列化结果里自己加上一个“@class”属性，属性值是被序列化的对象的类
+         * 例如：
+         * {
+         * "@class":"com.hyf.algorithm.抽奖概率.common.Result",
+         *      "code":0,"
+         *      msg":"success",
+         *      "data":
+         *          {
+         *          "@class":"com.hyf.testDemo.redis.User",
+         *          "id":100007,
+         *          "name":"测试",
+         *          "age":1,
+         *          "phone":"15627230001"
+         *      }
+         * }
+         */
+
         return new GenericJackson2JsonRedisSerializer();
     }
 }
