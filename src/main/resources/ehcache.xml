@@ -27,6 +27,8 @@
             LFU， Less Frequently Used，就是上面例子中使用的策略，直白一点就是讲一直以来最少被使用的。如上面所讲，缓存的元素有一个hit属性，hit值最小的将会被清出缓存。
             LRU，Least Recently Used，最近最少使用的，缓存的元素有一个时间戳，当缓存容量满了，而又需要腾出地方来缓存新的元素的时候，那么现有缓存元素中时间戳离当前时间最远的元素将被清出缓存。
 -->
+
+    <!--如果在下面没有为特定的 cacheName 配置缓存信息，EhCache 会使用默认配置-->
     <defaultCache
             eternal="false"
             maxElementsInMemory="1000"
@@ -42,7 +44,18 @@
         diskPersistent 设置成 true，不管数据是缓存在内存还是磁盘，项目停止，数据会保留在磁盘中
      -->
     <cache
-            name="user_cache"
+            name="userCache"
+            eternal="false"
+            maxElementsInMemory="100"
+            overflowToDisk="false"
+            diskPersistent="true"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="300"
+            memoryStoreEvictionPolicy="LRU"
+    />
+
+    <cache
+            name="bookCache"
             eternal="false"
             maxElementsInMemory="100"
             overflowToDisk="false"

@@ -19,7 +19,6 @@ public class EhCacheConfiguration {
     public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
         EhCacheManagerFactoryBean cacheManagerFactoryBean = new
                 EhCacheManagerFactoryBean();
-        // ehcache 的配置文件
         Resource resource = new ClassPathResource("ehcache.xml");
         cacheManagerFactoryBean.setConfigLocation(resource);
         cacheManagerFactoryBean.setShared(true);

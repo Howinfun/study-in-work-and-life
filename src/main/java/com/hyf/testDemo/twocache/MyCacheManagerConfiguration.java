@@ -17,6 +17,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 @EnableCaching
 public class MyCacheManagerConfiguration {
 
+
     @Bean
     @Primary
     public CacheManager cacheManager(MyCacheTemplate myCacheTemplate){
@@ -30,7 +31,6 @@ public class MyCacheManagerConfiguration {
         MyCacheTemplate myCacheTemplate = new MyCacheTemplate();
         myCacheTemplate.setRedisCacheManager(redisCacheManager);
         myCacheTemplate.setEhCacheCacheManager(ehCacheCacheManager);
-        //myCacheTemplate.setName("user_cache");
         return myCacheTemplate;
     }
 }

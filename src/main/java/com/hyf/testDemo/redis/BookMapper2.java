@@ -11,34 +11,34 @@ import org.springframework.stereotype.Repository;
 /**
  * @author Howinfun
  * @desc
- * @date 2020/3/25
+ * @date 2020/3/27
  */
 @Repository
-@CacheConfig(cacheNames = {"userCache"})
-public interface UserMapper extends BaseMapper<User> {
+@CacheConfig(cacheNames = {"bookCache"})
+public interface BookMapper2 extends BaseMapper<Book2> {
 
     @Cacheable(key = "#id",unless = "#result == null")
-    User selectById(Long id);
+    Book2 selectById(Long id);
 
-    @CachePut(key = "#user.id", condition = "#user.name != null and #user.name != ''")
-    default User insert0(User user) {
+    @CachePut(key = "#book2.id", condition = "#book2.bookName != null and #book2.bookName != ''")
+    default Book2 insert0(Book2 book2) {
         // 插入
-        this.insert(user);
+        this.insert(book2);
         // 返回
-        return user;
+        return book2;
     }
 
     @CacheEvict(key = "#id")
     int deleteById(Long id);
 
     @Caching(
-            evict = {@CacheEvict(key = "#user.id", beforeInvocation = true)},
-            put = {@CachePut(key = "#user.id")}
+            evict = {@CacheEvict(key = "#book2.id", beforeInvocation = true)},
+            put = {@CachePut(key = "#book2.id")}
     )
-    default User updateUser0(User user){
+    default Book2 updateBook0(Book2 book2){
         // 更新
-        this.updateById(user);
+        this.updateById(book2);
         // 返回
-        return user;
+        return book2;
     }
 }

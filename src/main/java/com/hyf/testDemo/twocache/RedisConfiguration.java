@@ -12,9 +12,10 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Howinfun
@@ -36,22 +37,43 @@ public class RedisConfiguration {
     @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory){
 
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                // 60s缓存失效
-                .entryTtl(Duration.ofSeconds(600000))
+        Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>(2);
+
+        RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
+                // 30s缓存失效
+                .entryTtl(Duration.ofSeconds(30))
                 // 设置key的序列化方式
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer()))
                 // 设置value的序列化方式
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer()))
                 // 不缓存null值
                 .disableCachingNullValues();
-        /*Redis 可以不在 RedisCacheManager 配置好对应的 cacheNames 属性。因为它的底层源码在根据 cacheNames 获取 Cache 时，如果为空，则自己创建。
-        Set<String> cacheNames = new HashSet<>(1);
-        cacheNames.add("user_cache");
-        cacheNames.add("user");*/
+
+        RedisCacheConfiguration userConfig = RedisCacheConfiguration.defaultCacheConfig()
+                // 10s缓存失效
+                .entryTtl(Duration.ofSeconds(66))
+                // 设置key的序列化方式
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer()))
+                // 设置value的序列化方式
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer()))
+                // 不缓存null值
+                .disableCachingNullValues();
+        cacheConfigurations.put("userCache",userConfig);
+
+        RedisCacheConfiguration bookConfig = RedisCacheConfiguration.defaultCacheConfig()
+                // 10s缓存失效
+                .entryTtl(Duration.ofSeconds(66))
+                // 设置key的序列化方式
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer()))
+                // 设置value的序列化方式
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer()))
+                // 不缓存null值
+                .disableCachingNullValues();
+        cacheConfigurations.put("bookCache",bookConfig);
+
         RedisCacheManager redisCacheManager = RedisCacheManager.builder(connectionFactory)
-                .cacheDefaults(config)
-                //.initialCacheNames(cacheNames)
+                .cacheDefaults(defaultConfig)
+                .withInitialCacheConfigurations(cacheConfigurations)
                 .transactionAware()
                 .build();
         return redisCacheManager;
@@ -60,12 +82,9 @@ public class RedisConfiguration {
     @Bean(name = "myKeyGenerator")
     public KeyGenerator keyGenerator(){
         // 缓存 key 的生成策略
-        return new KeyGenerator() {
-            @Override
-            public Object generate(Object o, Method method, Object... objects) {
-                // 将方法的多个入参转成字符串
-                return Arrays.asList(objects).toString();
-            }
+        return (o, method, objects) -> {
+            // 将方法的多个入参转成字符串
+            return Arrays.asList(objects).toString();
         };
     }
 
