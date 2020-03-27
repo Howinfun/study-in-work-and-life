@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.hyf</groupId>
-    <artifactId>test-algorithm</artifactId>
+    <artifactId>study-in-work-and-life</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>study-in-work-and-life</name>
     <description>工作和生活中的学习</description>
@@ -22,22 +22,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!--<dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>1.3.2</version>
-        </dependency>-->
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
         </dependency>
 
         <dependency>
@@ -69,24 +53,18 @@
         </dependency>
 
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
             <exclusions>
                 <exclusion>
-                    <!--如果使用 lettuce 并且要使用连接池，需要自己引入连接池依赖
-                        <dependency>
-                            <groupId>org.apache.commons</groupId>
-                            <artifactId>commons-pool2</artifactId>
-                        </dependency>
-                    -->
                     <groupId>io.lettuce</groupId>
                     <artifactId>lettuce-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
 
-        <!-- 实现对 MyBatis Plus 的自动化配置 -->
+        &lt;!&ndash; 实现对 MyBatis Plus 的自动化配置 &ndash;&gt;
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -98,11 +76,24 @@
             <artifactId>jedis</artifactId>
         </dependency>
 
-        <!-- ehcache 缓存 -->
+        &lt;!&ndash; ehcache 缓存 &ndash;&gt;
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
             <version>2.10.6</version>
+        </dependency>-->
+
+        <!-- 使用 MyBatis Plus 就不用再引入 MyBatis 的依赖了
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.2</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.hyf</groupId>
+            <artifactId>h2cache-spring-boot-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

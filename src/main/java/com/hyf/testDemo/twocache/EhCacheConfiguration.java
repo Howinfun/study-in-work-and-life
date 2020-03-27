@@ -3,7 +3,6 @@ package com.hyf.testDemo.twocache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -12,7 +11,7 @@ import org.springframework.core.io.Resource;
  * @desc
  * @date 2020/3/25
  */
-@Configuration
+//@Configuration
 public class EhCacheConfiguration {
 
     @Bean
