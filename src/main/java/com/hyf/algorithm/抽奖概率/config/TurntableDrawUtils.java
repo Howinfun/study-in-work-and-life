@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -34,7 +33,7 @@ public class TurntableDrawUtils {
     /**
      * 初始化
      */
-    @PostConstruct
+    //@PostConstruct
     public void init(){
         List<TurntableDraw> drawList = turntableMapper.getDraw();
         if (drawList != null && drawList.size() > 0){

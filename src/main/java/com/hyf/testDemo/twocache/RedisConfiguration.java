@@ -2,7 +2,6 @@ package com.hyf.testDemo.twocache;
 
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -22,7 +21,7 @@ import java.util.Map;
  * @desc
  * @date 2020/3/24
  */
-@Configuration
+//@Configuration
 public class RedisConfiguration {
 
     @Bean(name="jsonRedisTemplate")
