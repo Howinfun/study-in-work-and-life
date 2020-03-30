@@ -94,6 +94,12 @@
             <groupId>com.hyf</groupId>
             <artifactId>h2cache-spring-boot-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.lettuce</groupId>
+                    <artifactId>lettuce-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

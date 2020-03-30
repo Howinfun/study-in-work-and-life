@@ -3,7 +3,6 @@ package com.hyf.testDemo.twocache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheManager;
 
@@ -12,7 +11,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
  * @desc
  * @date 2020/3/25
  */
-@Configuration
+//@Configuration
 //@EnableCaching
 public class MyCacheManagerConfiguration {
 
