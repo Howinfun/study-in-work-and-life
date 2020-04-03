@@ -31,11 +31,11 @@ https://issues.sonatype.org 在这上面注册一个帐号。
 5、上传密钥
 
 ```
-gpg --keyserver http://pool.sks-keyservers.net:11371 --send-keys 密钥
+gpg --keyserver http://pool.sks-keyservers.net:11371 --send-keys 8D2522AA90CD41AC1735DCBE52608BB84871117D 密钥
 
-gpg --keyserver http://keyserver.ubuntu.com:11371 --send-keys 密钥
+gpg --keyserver http://keyserver.ubuntu.com:11371 --send-keys 8D2522AA90CD41AC1735DCBE52608BB84871117D 密钥
 
-gpg --keyserver http://keys.gnupg.net:11371 --send-keys 密钥
+gpg --keyserver http://keys.gnupg.net:11371 --send-keys 8D2522AA90CD41AC1735DCBE52608BB84871117D 密钥
 
 ```
 
@@ -84,7 +84,7 @@ gpg --keyserver 服务器地址 --send-keys 密钥
 
 
 7、修改 pom.xml
-
+参考：https://bitbucket.org/simpligility/ossrh-pipeline-demo
 首先当然修改项目的版本号了，不用再带 SNAPSHOT 了。
 
 ```xml
