@@ -91,7 +91,7 @@
         </dependency>-->
 
         <dependency>
-            <groupId>com.hyf</groupId>
+            <groupId>com.github.howinfun</groupId>
             <artifactId>h2cache-spring-boot-starter</artifactId>
             <version>0.0.1</version>
             <exclusions>
