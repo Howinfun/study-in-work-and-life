@@ -1,12 +1,16 @@
 package com.hyf.testDemo.redis;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
+
+import java.util.Map;
 
 /**
  * @author Howinfun
@@ -16,6 +20,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 @CacheConfig(cacheNames = {"bookCache"})
 public interface BookMapper2 extends BaseMapper<Book2> {
+
+    @Insert("insert into book(book_name,read_frequency)values(#{bookName},#{readFrequency})")
+    void insert2(Map<String,Object> map);
+
+    @Update("update book set book_name = #{bookName} where id = #{id}")
+    void update2(Map<String,Object> map);
 
     @Cacheable(key = "#id",unless = "#result == null")
     Book2 selectById(Long id);

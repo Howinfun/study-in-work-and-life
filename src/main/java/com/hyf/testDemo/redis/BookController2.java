@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Howinfun
@@ -38,7 +40,11 @@ public class BookController2 {
 
     @PostMapping("/book")
     public Result addBook(@RequestBody Book2 book2){
-        return new Result(this.bookMapper2.insert0(book2));
+        //return new Result(this.bookMapper2.insert0(book2));
+        Map<String,Object> map = new HashMap<>(3);
+        map.put("bookName","哈哈测试");
+        this.bookMapper2.insert2(map);
+        return new Result();
     }
 
     @DeleteMapping("/book/{id}")
@@ -48,7 +54,11 @@ public class BookController2 {
 
     @PutMapping("/book")
     public Result updateBook(@RequestBody Book2 book2){
-        return new Result(this.bookMapper2.updateBook0(book2));
+        //return new Result(this.bookMapper2.updateBook0(book2));
+        Map<String,Object> map = new HashMap<>(3);
+        map.put("id","df5");
+        this.bookMapper2.update2(map);
+        return new Result();
     }
 
 }
