@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyf.testDemo.redis.BookMapper3">
+    <resultMap id="bookMap" type="com.hyf.testDemo.redis.Book2">
+        <id column="id" property="id" />
+        <result column="book_name" property="bookName" />
+        <result column="read_frequency" property="readFrequency" />
+    </resultMap>
+    
+    <select id="selectOne" resultMap="bookMap">
+        select
+            1 as id,
+            null as book_name,
+            3 as read_frequency
+        from book limit 1;
+    </select>
+</mapper>

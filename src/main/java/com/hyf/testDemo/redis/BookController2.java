@@ -26,6 +26,13 @@ public class BookController2 {
 
     @Resource
     private BookMapper2 bookMapper2;
+    @Resource
+    private BookMapper3 bookMapper3;
+
+    @GetMapping("/selectOne")
+    public Result selectOne(){
+        return new Result(bookMapper3.selectOne());
+    }
 
     @GetMapping("/book")
     public Result queryBookList(){
@@ -56,7 +63,8 @@ public class BookController2 {
     public Result updateBook(@RequestBody Book2 book2){
         //return new Result(this.bookMapper2.updateBook0(book2));
         Map<String,Object> map = new HashMap<>(3);
-        map.put("id","df5");
+        map.put("id","60");
+        map.put("id",60L);
         this.bookMapper2.update2(map);
         return new Result();
     }

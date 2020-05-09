@@ -24,7 +24,7 @@ public interface BookMapper2 extends BaseMapper<Book2> {
     @Insert("insert into book(book_name,read_frequency)values(#{bookName},#{readFrequency})")
     void insert2(Map<String,Object> map);
 
-    @Update("update book set book_name = #{bookName} where id = #{id}")
+    @Update("update book set book_name = #{bookName} where id = #{id,jdbcType=BIGINT,javaType=LONG}")
     void update2(Map<String,Object> map);
 
     @Cacheable(key = "#id",unless = "#result == null")
