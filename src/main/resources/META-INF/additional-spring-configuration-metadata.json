@@ -1,0 +1,10 @@
+{
+  "properties":[
+    {
+      "name":"h2cache.enabled",
+      "type":"java.lang.Boolean",
+      "description":"是否启动 h2cache."
+    }
+
+  ]
+}
