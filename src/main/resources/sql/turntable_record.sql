@@ -1,14 +1,14 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地MySQL
- Source Server Type    : MySQL
- Source Server Version : 50717
+ Source Send         : 本地MySQL
+ Source Send Type    : MySQL
+ Source Send Version : 50717
  Source Host           : localhost:3306
  Source Schema         : test-easyexcel
 
- Target Server Type    : MySQL
- Target Server Version : 50717
+ Target Send Type    : MySQL
+ Target Send Version : 50717
  File Encoding         : 65001
 
  Date: 05/08/2019 16:42:22
