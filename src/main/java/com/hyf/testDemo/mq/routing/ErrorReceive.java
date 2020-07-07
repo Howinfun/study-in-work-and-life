@@ -38,6 +38,6 @@ public class ErrorReceive {
         };
 
         channel.basicQos(1);
-        channel.basicConsume(queueName, false, callback, comsumerTag -> {});
+        channel.basicConsume(queueName, false, callback, consumerTag -> {});
     }
 }
