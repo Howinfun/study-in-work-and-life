@@ -11,10 +11,10 @@ public class ConnectionFactoryUtils {
 
     public static ConnectionFactory getFactory() {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("127.0.0.1");
-        factory.setVirtualHost("vhost");
+        factory.setHost("10.172.0.187");
+        factory.setVirtualHost("mc_vhost");
         factory.setUsername("admin");
-        factory.setPassword("password");
+        factory.setPassword("mcmc#1918");
         return factory;
     }
 }
