@@ -1,31 +1,19 @@
 package com.hyf.testDemo.clone;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.Arrays;
 
 /**
  * @author Howinfun
- * @desc
+ * @desc Arrays.copf 是浅克隆，只是将旧数组的引用地址复制了一份给新数组
  * @date 2020/6/3
  */
-public class TestClone {
+public class TestArraysCopy {
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    static class User{
-        private Long id;
-        private String name;
-    }
+
 
     public static void main(String[] args){
 
-        User[] u1= {new User(1L,"Howinfun")};
+        User[] u1= {new User(1L,"Howinfun",new Address(1L,"佛山"))};
         User[] u2 = Arrays.copyOf(u1,u1.length);
 
         u1[0].setName("pengpeng");
