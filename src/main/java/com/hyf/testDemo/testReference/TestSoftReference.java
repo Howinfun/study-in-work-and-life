@@ -1,5 +1,7 @@
 package com.hyf.testDemo.testReference;
 
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +24,28 @@ public class TestSoftReference {
          *
          * 当两个 1M 大小的实例对象进入老年代，那么就会触发 full gc，此时会将软引用的实例对象清理掉，那么全部对象都被清理掉了。
          *
-         * 所以当最后一次循环后，只剩下一个软引用的实例对象存活！
+         循环后，只剩下一个软引用的实例对象存活！
          */
+        ReferenceQueue queue = new ReferenceQueue();
+        new Thread(()->{
+            while (true){
+                Reference reference = queue.poll();
+                if (null != reference){
+                    System.out.println("引用类型:"+reference.getClass().getName());
+                    System.out.println("引用变量："+reference);
+                }
+            }
+        }).start();
+
         List<SoftReference> list = new ArrayList<>(10);
         for (int i =0; i<=10; i++){
             // 1M 大小的字节数组
             byte[] bytes = new byte[1024 * 1024];
-            SoftReference<byte[]> softReference = new SoftReference<>(bytes);
+            bytes[0]='a';
+            bytes[1]='b';
+            SoftReference<byte[]> softReference = new SoftReference<>(bytes,queue);
             list.add(softReference);
         }
-
         list.forEach((sr -> System.out.println(sr.get())));
     }
 }
