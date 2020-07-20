@@ -1,29 +1,28 @@
-package com.hyf.testDemo.testNIO;
-
-import cn.hutool.core.thread.ThreadUtil;
+package com.hyf.testDemo.testReactor;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.Date;
+import java.nio.charset.Charset;
 
 /**
  * @author Howinfun
  * @desc
  * @date 2020/7/18
  */
-public class WriteHandler {
+public class ReadHandler {
 
     public static void handle(SelectionKey selectionKey){
         try {
 
             SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
             ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-            String msg = new Date() + "Hello Client~";
-            byteBuffer.put(msg.getBytes());
-            socketChannel.write(byteBuffer);
-            ThreadUtil.sleep(2000);
+            // (3) 面向 Buffer
+            socketChannel.read(byteBuffer);
+            byteBuffer.flip();
+            System.out.println("服务端接收到客户端的信息：" + Charset.defaultCharset().newDecoder().decode(byteBuffer)
+                    .toString());
 
         } catch (Exception e){
             System.out.println("ReadHandler 处理失败！");
