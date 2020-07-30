@@ -11,7 +11,7 @@ public class ConnectionFactoryUtils {
 
     public static ConnectionFactory getFactory() {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("xxx.xxx.xxx.xxx");
+        factory.setHost("10.172.0.187");
         factory.setVirtualHost("hyf_test");
         factory.setUsername("hyf");
         factory.setPassword("hyf");
