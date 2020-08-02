@@ -41,10 +41,7 @@ public class DeadLetterQueueListener {
                 // 更新数据库记录
                 System.out.println("消息【" + userMsg.getId() + "】发送成功，失败次数：" + userMsg.getFailCount());
                 userMsgMapper.update(userMsg);
-                channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
             }else {
-                // nack，但是不重新入队
-                channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
                 // 重新发到业务队列中
                 int failCount = userMsg.getFailCount()+1;
                 if (failCount > 5){
@@ -63,17 +60,10 @@ public class DeadLetterQueueListener {
                     rabbitTemplate.convertAndSend(RabbitMQConfig.BUSINESS_EXCHANGE_NAME,RabbitMQConfig.BUSINESS_QUEUE_ROUTING_KEY,msgJson,messagePostProcessor);
                 }
             }
-
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
         } catch (Exception e) {
-            if (message.getMessageProperties().getRedelivered()) {
-                System.err.println("消息已重复处理失败,拒绝再次接收...");
-                // 拒绝消息
-                channel.basicReject(message.getMessageProperties().getDeliveryTag(), false);
-            } else {
-                System.err.println("消息即将再次返回队列处理...");
-                // 第一个布尔值：是否批量提交  第二个布尔值：是否重新入队列
-                channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, false);
-            }
+            System.err.println("消息即将再次返回队列处理...");
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
         }
     }
 }

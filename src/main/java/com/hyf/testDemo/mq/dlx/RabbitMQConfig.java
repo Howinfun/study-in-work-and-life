@@ -20,11 +20,29 @@ import java.util.Map;
 @Configuration
 public class RabbitMQConfig {
 
+    /**
+     * 业务 queue
+     */
     public static final String BUSINESS_QUEUE_NAME = "business.queue";
+    /**
+     * 业务 exchange
+     */
     public static final String BUSINESS_EXCHANGE_NAME = "business.exchange";
+    /**
+     * 业务 routing key
+     */
     public static final String BUSINESS_QUEUE_ROUTING_KEY = "business.routing.key";
+    /**
+     * 死信队列 exchange
+     */
     public static final String DEAD_LETTER_EXCHANGE_NAME = "dead.letter.exchange";
+    /**
+     * 死信队列 queue
+     */
     public static final String DEAD_LETTER_QUEUE_NAME = "dead.letter.queue";
+    /**
+     * 死信队列 routing key
+     */
     public static final String DEAD_LETTER_QUEUE_ROUTING_KEY = "dead.letter.routing.key";
 
     /**
