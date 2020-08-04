@@ -1,7 +1,5 @@
 package com.hyf.testDemo.testReactor.multiThread;
 
-import com.hyf.testDemo.testReactor.singleThread.EchoServerHandler;
-
 import java.io.IOException;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -26,7 +24,7 @@ public class MultiAcceptorHandler implements Runnable{
             SocketChannel socketChannel = serverSocketChannel.accept();
             if (null != socketChannel){
                 Selector selector = MultiEchoServerReactor.selectors[MultiEchoServerReactor.next.get()];
-                new EchoServerHandler(selector,socketChannel);
+                new MultiEchoServerHandler(selector,socketChannel);
             }
         } catch (IOException e) {
             e.printStackTrace();
