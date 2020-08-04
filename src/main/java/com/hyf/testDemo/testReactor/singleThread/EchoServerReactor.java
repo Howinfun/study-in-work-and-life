@@ -1,4 +1,4 @@
-package com.hyf.testDemo.testReactor;
+package com.hyf.testDemo.testReactor.singleThread;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -12,27 +12,28 @@ import java.util.Set;
  * @desc
  * @date 2020/7/18
  */
-public class Reactor implements Runnable{
+public class EchoServerReactor implements Runnable{
 
     final private Selector selector;
-    final private ServerSocketChannel serverSocket;
+    final private ServerSocketChannel serverSocketChannel;
 
-    public Reactor(int port) throws Exception{
+    public EchoServerReactor(int port) throws Exception{
 
         selector = Selector.open();
-        serverSocket = ServerSocketChannel.open();
+        serverSocketChannel = ServerSocketChannel.open();
         // 绑定端口号
-        serverSocket.socket().bind(new InetSocketAddress(port));
+        serverSocketChannel.socket().bind(new InetSocketAddress(port));
         // 非阻塞
-        serverSocket.configureBlocking(false);
-        SelectionKey selectionKey = serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+        serverSocketChannel.configureBlocking(false);
+        SelectionKey sk = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        sk.attach(new AcceptorHandler(selector,serverSocketChannel));
 
     }
 
     @Override
     public void run() {
         try {
-            System.out.println("我是 Reactor，我启动了");
+            System.out.println("我是 EchoServerReactor，我启动了");
             Set selected;
             while (true){
                 if (selector.select() > 0){
@@ -56,20 +57,14 @@ public class Reactor implements Runnable{
      * @param selectionKey
      */
     private void dispatch(SelectionKey selectionKey){
-        if (selectionKey.isAcceptable()){
-            AcceptorHandler.handle(selectionKey);
-        } else if (selectionKey.isReadable()){
-            ReadHandler.handle(selectionKey);
-        }else if (selectionKey.isWritable()){
-            WriteHandler.handle(selectionKey);
-        }
+        Runnable handler = (Runnable) selectionKey.attachment();
+        handler.run();
     }
 
     public static void main(String[] args) throws Exception{
 
-
-        Reactor reactor = new Reactor(8080);
-        Thread thread = new Thread(reactor);
+        EchoServerReactor echoServerReactor = new EchoServerReactor(8080);
+        Thread thread = new Thread(echoServerReactor);
         thread.start();
 
     }

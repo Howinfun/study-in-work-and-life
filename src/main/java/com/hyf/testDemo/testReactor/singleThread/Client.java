@@ -1,7 +1,6 @@
-package com.hyf.testDemo.testReactor;
+package com.hyf.testDemo.testReactor.singleThread;
 
 import java.net.Socket;
-import java.nio.charset.Charset;
 import java.util.Date;
 
 /**
@@ -17,7 +16,7 @@ public class Client {
         new Thread(()->{
             try {
                 while (true){
-                    socket.getOutputStream().write((new Date() + ": hello world").getBytes());
+                    socket.getOutputStream().write((new Date() + ": 早上好鸭").getBytes());
                     Thread.sleep(2000);
                 }
             } catch (Exception e) {
@@ -28,9 +27,9 @@ public class Client {
             try {
                 while (true){
                     byte[] bytes = new byte[1024];
-                    socket.getInputStream().read(bytes);
-                    if (bytes.length > 0){
-                        System.out.println("结束到服务端的信息："+new String(bytes, Charset.forName("GBK")));
+                    int length = socket.getInputStream().read(bytes);
+                    if (length > 0){
+                        System.out.println("接收到服务端的信息："+new String(bytes, 1,length));
                     }
                     Thread.sleep(2000);
                 }
