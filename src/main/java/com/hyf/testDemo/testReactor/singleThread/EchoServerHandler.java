@@ -16,8 +16,6 @@ public class EchoServerHandler implements Runnable{
     final SocketChannel socketChannel;
     final SelectionKey sk;
     final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-    static final int RECEIVING = 0,SENDING = 1;
-    int state = RECEIVING;
 
     public EchoServerHandler(Selector selector, SocketChannel socketChannel) throws IOException {
         this.socketChannel = socketChannel;
@@ -42,8 +40,6 @@ public class EchoServerHandler implements Runnable{
                 byteBuffer.clear();
                 // 注册 read 就绪模式
                 sk.interestOps(SelectionKey.OP_READ);
-                // 改为接收状态
-                state = RECEIVING;
             }else if (sk.isReadable()){
                 int length;
                 // 从通道读取到 byteBuffer
@@ -55,7 +51,6 @@ public class EchoServerHandler implements Runnable{
                 // 注册 write 就绪模式
                 sk.interestOps(SelectionKey.OP_WRITE);
                 // 改为接发送状态
-                state = SENDING;
             }
         }catch (Exception e){
             e.printStackTrace();
