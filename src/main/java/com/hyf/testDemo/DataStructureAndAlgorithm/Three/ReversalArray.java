@@ -1,11 +1,11 @@
-package com.hyf.testDemo.DataStructureAndAlgorithm;
+package com.hyf.testDemo.DataStructureAndAlgorithm.Three;
 
 /**
  * @author Howinfun
  * @desc 对于一个包含 5 个元素的数组，如果要把这个数组元素的顺序翻转过来。你可以试着分析该过程需要对数据进行哪些操作？
  * @date 2020/8/3
  */
-public class ThreeClass {
+public class ReversalArray {
 
     public static void main(String[] args) {
         int[] intArr = new int[]{1,2,3,4,5};
@@ -23,7 +23,7 @@ public class ThreeClass {
         }*/
 
         /**
-         * 利用二分法
+         * 只需要遍历数组的一半，利用 index 来完成反转
          */
         int len = length / 2;
         for (int i = 0; i< len; i++){
