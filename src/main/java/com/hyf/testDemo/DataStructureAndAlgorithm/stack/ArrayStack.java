@@ -27,8 +27,7 @@ public class ArrayStack<T> {
     }
 
     public T pop(){
-        --top;
-        if (top >= 0){
+        if (--top >= 0){
             return (T) data[top];
         }else {
             throw new RuntimeException("越界！");
