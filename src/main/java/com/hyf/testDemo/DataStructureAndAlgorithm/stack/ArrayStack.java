@@ -7,7 +7,7 @@ package com.hyf.testDemo.DataStructureAndAlgorithm.stack;
  */
 public class ArrayStack<T> {
 
-    /** 栈顶指针 top */
+    /** 栈顶指针 top -1 表示空栈*/
     private int top;
     private int capacity;
     private Object[] data;
@@ -15,22 +15,22 @@ public class ArrayStack<T> {
     public ArrayStack(int capacity){
         this.capacity = capacity;
         data = new Object[capacity];
-        top = 0;
+        top = -1;
     }
 
     public void push(T node){
         if (top < capacity){
-            data[top++] = node;
+            data[++top] = node;
         }else {
             throw new RuntimeException("越界！");
         }
     }
 
     public T pop(){
-        if (--top >= 0){
-            return (T) data[top];
-        }else {
-            throw new RuntimeException("越界！");
+        if (top == -1){
+            throw new RuntimeException("空栈！");
+        }else{
+            return (T) data[top--];
         }
     }
 
