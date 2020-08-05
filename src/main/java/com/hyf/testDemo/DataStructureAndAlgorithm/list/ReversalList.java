@@ -1,7 +1,4 @@
-package com.hyf.testDemo.DataStructureAndAlgorithm.Four;
-
-import com.hyf.testDemo.DataStructureAndAlgorithm.MyList;
-import com.hyf.testDemo.DataStructureAndAlgorithm.MyListEntry;
+package com.hyf.testDemo.DataStructureAndAlgorithm.list;
 
 /**
  * @author Howinfun

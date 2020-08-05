@@ -1,4 +1,4 @@
-package com.hyf.testDemo.DataStructureAndAlgorithm;
+package com.hyf.testDemo.DataStructureAndAlgorithm.list;
 
 import lombok.Data;
 

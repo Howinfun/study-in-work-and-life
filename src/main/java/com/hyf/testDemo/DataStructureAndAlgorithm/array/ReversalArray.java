@@ -1,4 +1,4 @@
-package com.hyf.testDemo.DataStructureAndAlgorithm.Three;
+package com.hyf.testDemo.DataStructureAndAlgorithm.array;
 
 /**
  * @author Howinfun
