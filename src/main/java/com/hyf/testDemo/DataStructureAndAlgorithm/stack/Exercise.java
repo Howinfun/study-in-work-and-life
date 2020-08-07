@@ -10,7 +10,7 @@ import java.util.Stack;
  *       例如，链表为 1 -> 2 -> 3 -> 4 -> 5 -> 6，k = 3，则打印 321654。仍然是这道题，我们试试用栈来解决它吧。
  * @date 2020/8/5
  */
-public class Test {
+public class Exercise {
 
     public static void main(String[] args) {
 
