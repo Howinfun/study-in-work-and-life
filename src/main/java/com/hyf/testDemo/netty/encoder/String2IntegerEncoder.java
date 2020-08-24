@@ -23,7 +23,8 @@ public class String2IntegerEncoder extends MessageToMessageEncoder<String> {
         char[] charArray = s.toCharArray();
         for (char c : charArray) {
             if (c >= 48 & c <= 57){
-                list.add(Integer.valueOf(c));
+                String sc = String.valueOf(c);
+                list.add(Integer.valueOf(sc));
             }
         }
     }
@@ -43,6 +44,7 @@ public class String2IntegerEncoder extends MessageToMessageEncoder<String> {
         channel.flushOutbound();
         ByteBuf byteBuf = channel.readOutbound();
         while (byteBuf != null){
+
             System.out.println("拿到了整数的编码："+byteBuf.readInt());
             byteBuf = channel.readOutbound();
         }
