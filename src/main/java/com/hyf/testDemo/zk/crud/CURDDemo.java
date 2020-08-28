@@ -17,11 +17,12 @@ import java.util.List;
 public class CURDDemo {
 
     public static CuratorFramework client = CuratorClientFacotry.newClient();
+    static {
+        client.start();
+    }
 
     public static void main(String[] args) throws Exception{
 
-
-        client.start();
         //create("/test/child4","child4");
         //delete("/test/child3");
         //("/test/child1","child1child1");
