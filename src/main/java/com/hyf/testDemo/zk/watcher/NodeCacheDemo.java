@@ -88,6 +88,16 @@ public class NodeCacheDemo {
              *  · dataIsCompressed参数，表示是否对节点数据进行压缩。
              *  · threadFactory参数表示线程池工厂，当PathChildrenCache内部需要启动新的线程执行时，使用该线程池工厂来创建线程。
              *  · executorService和threadFactory参数差不多，表示通过传入的线程池或者线程工厂来异步处理监听事件。
+             *
+             * start方法可以传入启动的模式，定义在StartMode枚举中，具体如下：
+             * · NORMAL——异步初始化cache
+             * · BUILD_INITIAL_CACHE——同步初始化cache
+             * · POST_INITIALIZED_EVENT——异步初始化cache，并触发完成事件
+             *
+             * StartMode枚举的三种启动方式，详细说明如下：（
+             * （1）BUILD_INITIAL_CACHE模式：启动时同步初始化cache，表示创建cache后就从服务器提取对应的数据；
+             * （2）POST_INITIALIZED_EVENT模式：启动时异步初始化cache，表示创建cache后从服务器提取对应的数据，完成后触发PathChildrenCacheEvent.Type#INITIALIZED事件，cache中Listener会收到该事件的通知；
+             * （3）NORMAL模式：启动时异步初始化cache，完成后不会发出通知。
              */
             PathChildrenCache nodeCache = new PathChildrenCache(client,path,true);
             PathChildrenCacheListener listener = new PathChildrenCacheListener() {
@@ -121,6 +131,15 @@ public class NodeCacheDemo {
         try {
             CuratorFramework client = CuratorClientFacotry.newClient();
             client.start();
+            /**
+             * Tree Cache可以看作是Node Cache和Path Cache的合体。Tree Cache不光能监听子节点，还能监听节点自身。
+             *
+             * 第一个参数就是传入创建的Curator框架的客户端，第二个参数就是监听节点的路径，其他参数的简单说明如下：
+             * · dataIsCompressed：表示是否对数据进行压缩。
+             * · maxDepth表示缓存的层次深度，默认为整数最大值。
+             * · executorService表示监听的执行线程池，默认会创建一个单一线程的线程池。
+             * · createParentNodes表示是否创建父亲节点，默认为false。
+             */
             TreeCache treeCache = new TreeCache(client,path);
             TreeCacheListener listener = new TreeCacheListener() {
                 @Override
