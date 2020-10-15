@@ -16,9 +16,15 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <pulsar.version>2.6.1</pulsar.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.pulsar</groupId>
+            <artifactId>pulsar-client</artifactId>
+            <version>${pulsar.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
