@@ -18,7 +18,7 @@ public class RedisPool {
         poolConfig.setMaxTotal(6);
         poolConfig.setMaxIdle(3);
         poolConfig.setMinIdle(1);
-        jedisPool = new JedisPool(poolConfig,"10.172.0.204", 6379, 10000, null, 15);
+        jedisPool = new JedisPool(poolConfig,"127.0.0.1", 6371, 10000, null, 15);
     }
 
     public void execute(CallWithJedis caller){
