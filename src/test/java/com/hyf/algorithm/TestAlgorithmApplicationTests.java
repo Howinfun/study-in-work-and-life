@@ -1,5 +1,9 @@
 package com.hyf.algorithm;
 
+import com.hyf.testDemo.mybatis.testEnum.GenderEnum;
+import com.hyf.testDemo.mybatis.testEnum.User;
+import com.hyf.testDemo.mybatis.testEnum.UserEnumMapper;
+import com.hyf.testDemo.mybatis.testEnum.UserTypeEnum;
 import com.hyf.testDemo.testxml.AreaInfoMapper;
 import com.hyf.testDemo.testxml.RECORD;
 import com.hyf.testDemo.testxml.RECORDS;
@@ -19,6 +23,9 @@ public class TestAlgorithmApplicationTests {
     @Resource
     private AreaInfoMapper areaInfoMapper;
 
+    @Resource
+    private UserEnumMapper userEnumMapper;
+
     @Test
     public void contextLoads() {
         XStream xStream = new XStream();
@@ -28,6 +35,17 @@ public class TestAlgorithmApplicationTests {
         for (RECORD record : records.getRecords()) {
             areaInfoMapper.insert(record);
         }
+    }
+
+    @Test
+    public void insertUser(){
+        User user = new User();
+        user.setName("jianfeng");
+        user.setGender(GenderEnum.MALE);
+        user.setUserType(UserTypeEnum.STUDENT);
+        userEnumMapper.insert(user);
+
+        System.out.println(userEnumMapper.selectById(user.getId()));
     }
 
 }

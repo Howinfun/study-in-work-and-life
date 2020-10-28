@@ -22,6 +22,7 @@ import java.util.Map;
  * @date 2020/3/24
  */
 //@Configuration
+/*
 public class RedisConfiguration {
 
     @Bean(name="jsonRedisTemplate")
@@ -94,7 +95,8 @@ public class RedisConfiguration {
 
     // value值序列化方式
     private GenericJackson2JsonRedisSerializer valueSerializer(){
-        /**
+        */
+/**
          * Jackson Default Typing 机制序列化 会在序列化结果里自己加上一个“@class”属性，属性值是被序列化的对象的类
          * 例如：
          * {
@@ -110,8 +112,9 @@ public class RedisConfiguration {
          *          "phone":"15627230001"
          *      }
          * }
-         */
+         *//*
+
 
         return new GenericJackson2JsonRedisSerializer();
     }
-}
+}*/

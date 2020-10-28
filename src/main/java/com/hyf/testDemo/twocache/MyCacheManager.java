@@ -12,7 +12,7 @@ import java.util.Collections;
  * @desc
  * @date 2020/3/25
  */
-@Data
+/*@Data
 public class MyCacheManager implements CacheManager {
 
     private MyCacheTemplate myCacheTemplate;
@@ -27,4 +27,4 @@ public class MyCacheManager implements CacheManager {
     public Collection<String> getCacheNames() {
         return Collections.emptyList();
     }
-}
+}*/

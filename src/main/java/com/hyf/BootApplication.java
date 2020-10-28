@@ -13,7 +13,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
  */
 @SpringBootApplication
 @MapperScan(basePackages="com.hyf")
-@EnableCaching
+//@EnableCaching
 @EnableWebSocket
 public class BootApplication {
 

@@ -1,11 +1,5 @@
 package com.hyf.testDemo.twocache;
 
-import org.springframework.cache.ehcache.EhCacheCacheManager;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
 /**
  * @author Howinfun
  * @desc
@@ -14,7 +8,7 @@ import org.springframework.core.io.Resource;
 //@Configuration
 public class EhCacheConfiguration {
 
-    @Bean
+    /*@Bean
     public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
         EhCacheManagerFactoryBean cacheManagerFactoryBean = new
                 EhCacheManagerFactoryBean();
@@ -28,5 +22,5 @@ public class EhCacheConfiguration {
     public EhCacheCacheManager ehCacheCacheManager(EhCacheManagerFactoryBean ehCacheManagerFactoryBean){
         EhCacheCacheManager ehCacheCacheManager = new EhCacheCacheManager(ehCacheManagerFactoryBean.getObject());
         return ehCacheCacheManager;
-    }
+    }*/
 }

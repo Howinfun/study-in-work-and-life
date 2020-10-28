@@ -15,6 +15,7 @@ import java.util.concurrent.Callable;
  * @desc
  * @date 2020/3/25
  */
+/*
 @Data
 @Slf4j
 @NoArgsConstructor
@@ -103,3 +104,4 @@ public class MyCacheTemplate implements Cache {
         redisCache.clear();
     }
 }
+*/
