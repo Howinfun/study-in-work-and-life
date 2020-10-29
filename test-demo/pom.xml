@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.hyf</groupId>
-    <artifactId>study-in-work-and-life</artifactId>
+    <artifactId>test-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>study-in-work-and-life</name>
+    <name>test-demo</name>
     <description>工作和生活中的学习</description>
 
     <properties>
