@@ -8,7 +8,7 @@ import org.apache.dubbo.config.annotation.DubboService;
  * @author winfun
  * @date 2020/10/29 5:04 下午
  **/
-@DubboService(interfaceClass = DubboServiceTwo.class,protocol = "dubbo")
+@DubboService(interfaceClass = DubboServiceTwo.class)
 public class DubboServiceTwoImpl implements DubboServiceTwo {
 
     /***
