@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @author winfun
  * @date 2020/10/30 3:47 下午
  **/
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.winfun")
 public class WebResponseModifyAdvice implements ResponseBodyAdvice {
 
     @Override
@@ -27,6 +27,7 @@ public class WebResponseModifyAdvice implements ResponseBodyAdvice {
     @Override
     public Object beforeBodyWrite(final Object body, final MethodParameter methodParameter, final MediaType mediaType, final Class aClass,
                                   final ServerHttpRequest serverHttpRequest, final ServerHttpResponse serverHttpResponse) {
+
         if (body instanceof ApiResult) {
             ((ApiResult<?>) body).setTraceId(MDC.get(TraceUtil.TRACE_ID));
         }

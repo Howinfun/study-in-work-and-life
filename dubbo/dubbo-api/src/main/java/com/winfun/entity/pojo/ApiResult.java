@@ -18,13 +18,60 @@ public class ApiResult<T> {
     /**
      * 返回信息
      */
-    private String message;
+    private String message = "SUCCESS";
     /**
      * 返回结果
      */
-    private T result;
+    private T data;
     /**
      * traceId
      */
     private String traceId;
+
+    /**
+     * 构造函数
+     * @param data
+     */
+    public ApiResult(T data){
+        this.data = data;
+    }
+
+    /**
+     * 构造函数
+     * @param message
+     * @param data
+     */
+    public ApiResult(String message,T data){
+        this.message = message;
+        this.data = data;
+    }
+
+    /**
+     * 构造函数
+     * @param code
+     * @param message
+     * @param data
+     */
+    public ApiResult(Integer code,String message,T data){
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
+    /**
+     * success
+     * @return
+     */
+    public static ApiResult success(){
+        return success(null);
+    }
+
+    /**
+     * success
+     * @param data
+     * @return
+     */
+    public static ApiResult success(Object data){
+        return new ApiResult(data);
+    }
 }

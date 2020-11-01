@@ -3,13 +3,14 @@ package com.winfun.filter;
 import com.winfun.utils.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,21 +21,21 @@ import java.io.IOException;
  * @date 2020/10/30 3:02 下午
  **/
 @Slf4j
-@Component
-public class WebRequestFilter extends OncePerRequestFilter {
+@Order(1)
+@WebFilter(urlPatterns = "/*")
+public class WebRequestFilter implements Filter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-        long currTime = System.currentTimeMillis();
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
-        String uri = requestWrapper.getRequestURI();
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        String uri = request.getRequestURI();
+        // 初始化 TraceId
         TraceUtil.initTrace(uri);
-        try {
-            filterChain.doFilter(requestWrapper, responseWrapper);
-        } finally {
-            TraceUtil.clearTrace();
-        }
+        filterChain.doFilter(request,response);
+        // 清除 TraceId 和 TraceUri
+        TraceUtil.clearTrace();
     }
+
 }

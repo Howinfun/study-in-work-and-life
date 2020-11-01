@@ -14,10 +14,11 @@ public class TraceUtil {
     public final static String TRACE_URI = "uri";
 
     /**
-     * 初始化traceId,由consumer调用
+     * 初始化 TraceId
+     * @param uri 请求uri
      */
     public static void initTrace(String uri) {
-        if(StringUtils.isBlank(getTraceId())) {
+        if(StringUtils.isBlank(MDC.get(TRACE_ID))) {
             String traceId = generateTraceId();
             setTraceId(traceId);
             MDC.put(TRACE_URI, uri);
@@ -25,19 +26,15 @@ public class TraceUtil {
     }
 
     /**
-     * 从Dubbo中获取traceId，provider调用
-     * @param context   RPC上下文
+     * 从 RpcContext 中获取 Trace 相关信息，包括 TraceId 和 TraceUri
+     * 给 Dubbo 服务端调用
+     * @param context Dubbo 的 RPC 上下文
      */
     public static void getTraceFrom(RpcContext context) {
         String traceId = context.getAttachment(TRACE_ID);
-        if (StringUtils.isBlank(traceId)) {
-            traceId = context.getAttachment("traceId");
-            if (StringUtils.isBlank(traceId)) {
-                traceId = generateTraceId();
-            }
+        if (StringUtils.isNotBlank(traceId)){
+            setTraceId(traceId);
         }
-
-        setTraceId(traceId);
         String uri = context.getAttachment(TRACE_URI);
         if (StringUtils.isNotEmpty(uri)) {
             MDC.put(TRACE_URI, uri);
@@ -45,11 +42,12 @@ public class TraceUtil {
     }
 
     /**
-     * 把traceId放入dubbo远程调用中，consumer调用
-     * @param context   RPC上下文
+     * 将 Trace 相关信息，包括 TraceId 和 TraceUri 放入 RPC上下文中
+     * 给 Dubbo 消费端调用
+     * @param context Dubbo 的 RPC 上下文
      */
     public static void putTraceInto(RpcContext context) {
-        String traceId = getTraceId();
+        String traceId = MDC.get(TRACE_ID);
         if (StringUtils.isNotBlank(traceId)) {
             context.setAttachment(TRACE_ID, traceId);
         }
@@ -61,17 +59,10 @@ public class TraceUtil {
     }
 
     /**
-     * 从MDC中清除traceId
+     * 从 MDC 中清除当前线程的 Trace信息
      */
     public static void clearTrace() {
         MDC.clear();
-    }
-
-    /**
-     * 从MDC中获取traceId
-     * */
-    private static String getTraceId() {
-        return StringUtils.isBlank(MDC.get(TRACE_ID))?MDC.get("traceId"):MDC.get(TRACE_ID);
     }
 
     /**
@@ -79,9 +70,7 @@ public class TraceUtil {
      * @param traceId   链路ID
      */
     private static void setTraceId(String traceId) {
-        if (StringUtils.isNotEmpty(traceId)) {
-            traceId = StringUtils.left(traceId, 36);
-        }
+        traceId = StringUtils.left(traceId, 36);
         MDC.put(TRACE_ID, traceId);
     }
 

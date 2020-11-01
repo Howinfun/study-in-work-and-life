@@ -3,7 +3,7 @@
     <!-- 程序服务名 -->
     <springProperty scope="context" name="SERVICE_NAME" source="spring.application.name" defaultValue="unknown"/>
     <!-- 定义日志的根目录 -->
-    <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="/Users/winfun/weblog/java/${SERVICE_NAME}"/>
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="/Users/howinfun/weblog/java/${SERVICE_NAME}"/>
     <!-- 日志输出格式 -->
     <springProperty scope="context" name="LOG_PATTERN" source="logging.pattern" defaultValue="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-5level] [%logger{5}] [%X{uri}] [%X{trace_id}] - %msg%n"/>
 

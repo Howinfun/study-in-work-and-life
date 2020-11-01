@@ -1,5 +1,6 @@
 package com.winfun.controller;
 
+import com.winfun.entity.pojo.ApiResult;
 import com.winfun.service.DubboServiceOne;
 import com.winfun.service.DubboServiceTwo;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -24,9 +25,9 @@ public class HelloController {
     private DubboServiceTwo dubboServiceTwo;
 
     @GetMapping("/{name}")
-    public String sayHello(@PathVariable("name") String name){
+    public ApiResult sayHello(@PathVariable("name") String name){
         String hello = dubboServiceOne.sayHello(name);
         String hi = dubboServiceTwo.sayHi(name);
-        return hello + " " +hi;
+        return ApiResult.success(hello+" "+hi);
     }
 }
