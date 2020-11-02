@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.winfun</groupId>
-	<artifactId>dubbo-service</artifactId>
+	<artifactId>dubbo-consumer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>dubbo-service</name>
-	<description>dubbo-service</description>
+	<name>dubbo-consumer</name>
+	<description>dubbo-consumer</description>
 
 	<properties>
 		<java.version>1.8</java.version>
