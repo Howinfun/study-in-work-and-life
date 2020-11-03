@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    @DubboReference
+    @DubboReference(check = false,lazy = true)
     private DubboServiceOne dubboServiceOne;
 
-    @DubboReference
+    @DubboReference(check = false,lazy = true)
     private DubboServiceTwo dubboServiceTwo;
 
     @GetMapping("/{name}")

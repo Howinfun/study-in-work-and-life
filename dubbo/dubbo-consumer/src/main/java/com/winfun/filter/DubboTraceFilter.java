@@ -87,6 +87,13 @@ public class DubboTraceFilter implements Filter {
         return args;
     }
 
+    /***
+     *  处理 TraceId，如果当前对象是服务消费者，则将 Trace 信息放入 RpcContext中
+     *  如果当前对象是服务提供者，则从 RpcContext 中获取 Trace 信息。
+     * @author winfun
+
+     * @return {@link  }
+     **/
     private void handleTraceId() {
         RpcContext context = RpcContext.getContext();
         if (context.isConsumerSide()) {
