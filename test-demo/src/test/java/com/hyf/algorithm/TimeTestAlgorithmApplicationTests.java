@@ -18,7 +18,7 @@ import java.io.File;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestAlgorithmApplicationTests {
+public class TimeTestAlgorithmApplicationTests {
 
     @Resource
     private AreaInfoMapper areaInfoMapper;

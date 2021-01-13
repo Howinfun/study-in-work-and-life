@@ -37,11 +37,21 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <!--<dependency>
-            <groupId>com.hyf</groupId>
+        <dependency>
+            <groupId>com.shopline.commons</groupId>
             <artifactId>commons-jsoup-xss</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>-->
+            <version>1.1.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.yy.janus</groupId>
+                    <artifactId>janus-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.yy.onepiece.commons</groupId>
+                    <artifactId>commons-tracing-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
