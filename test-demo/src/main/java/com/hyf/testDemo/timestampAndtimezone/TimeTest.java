@@ -14,75 +14,107 @@ import java.time.ZoneOffset;
  **/
 public class TimeTest {
 
-    public static void getTime(String timezone){
-        // 默认取当前机器所在时区的日期&时间（北京时间 GMT+8）
-        LocalDateTime beijingNow = LocalDateTime.now();
-        System.out.println("北京时间："+beijingNow);
-        // 转时间戳
-        Long beijingTimestamp = beijingNow.toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        System.out.println("北京时间获取时间戳："+beijingTimestamp);
-        // 根据时间获取莫斯科日期&时间（GMT+3）
-        Instant instant = Instant.ofEpochMilli(beijingTimestamp);
-        ZoneId zone = ZoneId.of(timezone);
-        LocalDateTime moscowNow = LocalDateTime.ofInstant(instant,zone);
-        System.out.println("莫斯科时间："+moscowNow);
+    /***
+     * 对比同一时间戳，不同时区的时间显示
+     * @author winfun
+     * @param sourceTimezone sourceTimezone
+     * @param targetTimezone targetTimezone
+     * @return {@link Void }
+     **/
+    public static void compareTimeByTimezone(String sourceTimezone,String targetTimezone){
+        // 当前时间服务器UNIX时间戳
+        Long timestamp = System.currentTimeMillis();
+        // 获取源时区时间
+        Instant instant = Instant.ofEpochMilli(timestamp);
+        ZoneId sourceZoneId = ZoneId.of(sourceTimezone);
+        LocalDateTime sourceDateTime = LocalDateTime.ofInstant(instant,sourceZoneId);
+        // 获取目标时区时间
+        ZoneId targetZoneId = ZoneId.of(targetTimezone);
+        LocalDateTime targetDateTime = LocalDateTime.ofInstant(instant,targetZoneId);
+        System.out.println("The timestamp is "+timestamp+",The DateTime of Timezone{"+sourceTimezone+"} is "+sourceDateTime+
+                                   ",The " +
+                                   "DateTime of Timezone{"+targetTimezone+"} is "+targetDateTime);
     }
 
-
-    public static void getStartTimeAndToGMT8ByTimezone(String timezone){
+    /***
+     * 获取源时区的当前日期的零点零分，转为目标时区对应的时间戳
+     * @author winfun
+     * @param sourceTimezone 源时区
+     * @param targetTimezone 目标时区
+     * @return {@link Void }
+     **/
+    public static void getStartTimeFromSourceTimezoneAndConvertTimestampToTargetTimezone(String sourceTimezone,
+                                                                            String targetTimezone){
         // 获取指定时区的当前时间
-        LocalDate now = LocalDate.now(ZoneId.of(timezone));
+        ZoneId sourceZoneId = ZoneId.of(sourceTimezone);
+        LocalDateTime dateTime = LocalDateTime.now(sourceZoneId);
+        LocalDate date = LocalDate.now(sourceZoneId);
         // 获取上面时间的当天0点0分
-        LocalDateTime startTime = LocalDateTime.of(now, LocalTime.MIN);
-        // 转成目标时区<GMT+8>对应的时间戳
-        Long gmt8Timestamp = startTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        System.out.println("The Date of Timezone{"+timezone+"} is " + now + ",Thd StartTime of Timezone{"+timezone+
+        LocalDateTime startTime = LocalDateTime.of(date, LocalTime.MIN);
+        // 转成目标时区对应的时间戳
+        ZoneId targetZoneId = ZoneId.of(targetTimezone);
+        ZoneOffset targetZoneOffset = targetZoneId.getRules().getOffset(dateTime);
+        Long gmt8Timestamp = startTime.toInstant(targetZoneOffset).toEpochMilli();
+        System.out.println("The Date of Timezone{"+sourceTimezone+"} is " + date + ",Thd StartTime of Timezone{"+sourceTimezone+
                                    "} is,"+ startTime +
-                                   ",convert to GMT+8 timestamp is "+gmt8Timestamp);
+                                   ",convert to Timezone{"+targetTimezone+"} timestamp is "+gmt8Timestamp);
 
     }
 
-    public static void getEndTimeAndToGMT8ByTimezone(String timezone){
+    /***
+     * 获取源时区的当前日期的23点59分，转为目标时区对应的时间戳
+     * @author winfun
+     * @param sourceTimezone 源时区
+     * @param targetTimezone 目标时区
+     * @return {@link Void }
+     **/
+    public static void getEndTimeFromSourceTimezoneAndConvertTimestampToTargetTimezone(String sourceTimezone,
+                                                                                     String targetTimezone){
         // 获取指定时区的当前时间
-        LocalDate now = LocalDate.now(ZoneId.of(timezone));
+        ZoneId sourceZoneId = ZoneId.of(sourceTimezone);
+        LocalDateTime dateTime = LocalDateTime.now(sourceZoneId);
+        LocalDate date = LocalDate.now(sourceZoneId);
         // 获取上面时间的当天23点59分
-        LocalDateTime endTime = LocalDateTime.of(now, LocalTime.MAX);
-        // 转成目标时区<GMT+8>对应的时间戳
-        Long gmt8Timestamp = endTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
-        System.out.println("The Date of Timezone{"+timezone+"} is " + now + ",The EndTime of Timezone{"+timezone+
+        LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+        // 转成目标时区对应的时间戳
+        ZoneId targetZoneId = ZoneId.of(targetTimezone);
+        ZoneOffset targetZoneOffset = targetZoneId.getRules().getOffset(dateTime);
+        Long gmt8Timestamp = endTime.toInstant(targetZoneOffset).toEpochMilli();
+        System.out.println("The Date of Timezone{"+sourceTimezone+"} is " + date + ",The EndTime of Timezone{"+sourceTimezone+
                                    "} is"+ endTime +
-                                   ", convert to GMT+8 timestamp is "+gmt8Timestamp);
+                                   ", convert to Timezone{"+targetTimezone+"} timestamp is "+gmt8Timestamp);
 
     }
 
-    public static void getTimeAndToGMT8ByTimezone(String timezone){
+    /***
+     * 获取源时区的当前时间，转为目标时区对应的时间戳
+     * @author winfun
+     * @param sourceTimezone 源时区
+     * @param targetTimezone 目标时区
+     * @return {@link Void }
+     **/
+    public static void getTimeFromSourceTimezoneAndConvertToTargetTimezoneToTargetTimezone(String sourceTimezone,
+                                                                                           String targetTimezone){
         // 获取指定时区的当前时间
-        ZoneId sourceZoneId = ZoneId.of(timezone);
-        LocalDateTime now = LocalDateTime.now(sourceZoneId);
-        System.out.println(now);
+        ZoneId sourceZoneId = ZoneId.of(sourceTimezone);
+        LocalDateTime dateTime = LocalDateTime.now(sourceZoneId);
         /**
          * 转成指定时区对应的时间戳
          * 1、根据zoneId获取zoneOffset
          * 2、利用zoneOffset转成时间戳
          */
-        ZoneOffset offset = sourceZoneId.getRules().getOffset(now);
-        Long timestamp = now.toInstant(offset).toEpochMilli();
-        System.out.println(timestamp);
-        // 转成北京时间
-        Instant instant = Instant.ofEpochMilli(timestamp);
-        ZoneId targetZoneId = ZoneId.of("Asia/Shanghai");
-        LocalDateTime gmt8Now = LocalDateTime.ofInstant(instant,targetZoneId);
-        System.out.println(gmt8Now);
-        ZoneOffset gmt8Offset = targetZoneId.getRules().getOffset(gmt8Now);
-        Long gmt8Timestamp = gmt8Now.toInstant(gmt8Offset).toEpochMilli();
-        System.out.println(gmt8Timestamp);
+        ZoneId targetZoneId = ZoneId.of(targetTimezone);
+        ZoneOffset offset = targetZoneId.getRules().getOffset(dateTime);
+        Long timestamp = dateTime.toInstant(offset).toEpochMilli();
+        System.out.println("The DateTime of Timezone{"+sourceTimezone+"} is " + dateTime + ",convert to Timezone{"+targetTimezone+"} timestamp is "+timestamp);
     }
 
     public static void main(String[] args) {
-        String timezone = "Europe/Moscow";
-        //getTime(timezone);
-        //getStartTimeAndToGMT8ByTimezone(timezone);
-        //getEndTimeAndToGMT8ByTimezone(timezone);
-        getTimeAndToGMT8ByTimezone(timezone);
+        String sourceTimezone = "Europe/Moscow";
+        String targetTimezone = "Asia/Shanghai";
+        compareTimeByTimezone(sourceTimezone,targetTimezone);
+        getStartTimeFromSourceTimezoneAndConvertTimestampToTargetTimezone(sourceTimezone,targetTimezone);
+        getEndTimeFromSourceTimezoneAndConvertTimestampToTargetTimezone(sourceTimezone,targetTimezone);
+        getTimeFromSourceTimezoneAndConvertToTargetTimezoneToTargetTimezone(sourceTimezone,targetTimezone);
     }
 }
