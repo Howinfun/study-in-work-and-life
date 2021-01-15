@@ -28,6 +28,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-apache-dubbo-adapter</artifactId>
+            <version>1.7.2</version>
+        </dependency>
         <!-- dubbo begin  -->
 		<dependency>
 			<groupId>org.apache.dubbo</groupId>
