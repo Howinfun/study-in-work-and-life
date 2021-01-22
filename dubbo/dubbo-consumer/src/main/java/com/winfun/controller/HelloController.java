@@ -68,8 +68,8 @@ public class HelloController {
     @GetMapping("/{name}")
     public ApiResult sayHello(@PathVariable("name") final String name){
         //String hello = this.sayHelloByDubbo(name);
-        final String hello = this.sayHelloByDubbo2Code(name);
-        //final String hello = this.helloService.sayHello(name);
+        //final String hello = this.sayHelloByDubbo2Code(name);
+        final String hello = this.helloService.sayHello(name);
         return ApiResult.success(hello);
     }
 
