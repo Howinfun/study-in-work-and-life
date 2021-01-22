@@ -28,10 +28,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+        <!-- 适配 dubbo 框架，里面带了 sentinel-core -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-apache-dubbo-adapter</artifactId>
-            <version>1.7.2</version>
+            <version>1.8.0</version>
+        </dependency>
+        <!-- 支持 @SentinelResource 注解 -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-annotation-aspectj</artifactId>
+            <version>1.8.0</version>
         </dependency>
         <!-- dubbo begin  -->
 		<dependency>

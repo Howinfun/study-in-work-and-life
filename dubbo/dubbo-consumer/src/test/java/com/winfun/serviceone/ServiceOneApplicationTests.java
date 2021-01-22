@@ -1,45 +1,34 @@
 package com.winfun.serviceone;
 
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
-import com.alibaba.csp.sentinel.slots.block.RuleConstant;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.winfun.DubboServiceApplication;
-import com.winfun.service.DubboServiceOne;
-import org.apache.dubbo.config.annotation.DubboReference;
+import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@AutoConfigureMockMvc
 @SpringBootTest(classes = DubboServiceApplication.class)
 @RunWith(SpringRunner.class)
 public class ServiceOneApplicationTests {
 
-    static {
-            List<DegradeRule> rules = new ArrayList<>();
-            DegradeRule rule = new DegradeRule();
-            rule.setResource("com.winfun.service.DubboServiceOne");
-            // set threshold RT, 10 ms
-            rule.setCount(10);
-            rule.setGrade(RuleConstant.DEGRADE_GRADE_RT);
-            rule.setTimeWindow(10);
-            rules.add(rule);
-            DegradeRuleManager.loadRules(rules);
-    }
+    @Autowired
+    private MockMvc mockMvc;
 
-    @DubboReference
-    private DubboServiceOne dubboServiceOne;
-
-	@Test
-    @SentinelResource
-	public void contextLoads() {
-        for (int i = 0; i < 100; i++) {
-            dubboServiceOne.sayHello("winfun");
+    @SneakyThrows
+    @Test
+    public void sayHello(){
+        while (true){
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/hello/winfun"))
+                    .andReturn();
+            System.out.println(result.getResponse().getStatus());
+            System.out.println(result.getResponse().getContentAsString());
         }
-	}
+    }
 
 }
