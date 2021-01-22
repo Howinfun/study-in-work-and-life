@@ -2,6 +2,7 @@ package com.winfun.controller;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.adapter.dubbo.config.DubboAdapterGlobalConfig;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
@@ -33,6 +34,8 @@ import java.util.List;
 public class HelloController {
 
     public static final String RESOURCE_NAME = "dubboServiceOne";
+    public static final String DUBBO_INTERFACE_RESOURCE_NAME = "com.winfun.service.DubboServiceOne";
+    public static final String DUBBO_INTERFACE_METHOD_RESOURCE_NAME = "com.winfun.service.DubboServiceOne:sayHello(java.lang.String)";
     @DubboReference(check = false,lazy = true,retries = 1)
     private DubboServiceOne dubboServiceOne;
     @Resource
@@ -40,6 +43,7 @@ public class HelloController {
 
     /**
      * 初始化流控规则和熔断规则
+     * ps:因为我们没有接入 Sentinel Dashboard，所以得自己在代码里面设置好
      */
     static{
         // 初始化流控规则
@@ -63,13 +67,46 @@ public class HelloController {
         degradeRule.setTimeWindow(5);
         degradeRules.add(degradeRule);
         DegradeRuleManager.loadRules(degradeRules);
+
+        /**
+         * 给dubbo接口设置流控，维度：接口或方法
+         * 以 DubboServiceOne 接口为例子：
+         * 接口：com.winfun.service.DubboServiceOne
+         * 方法：com.winfun.service.DubboServiceOne:sayHello(java.lang.String)
+         */
+        // 初始化流控规则
+        final List<FlowRule> dubboFlowRules = new ArrayList<>();
+        // 限流规则
+        final FlowRule dobboInterfaceFlowRule = new FlowRule();
+        dobboInterfaceFlowRule.setResource(DUBBO_INTERFACE_RESOURCE_NAME);
+        dobboInterfaceFlowRule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        // 20 QPS
+        dobboInterfaceFlowRule.setCount(20);
+        dubboFlowRules.add(dobboInterfaceFlowRule);
+        FlowRuleManager.loadRules(dubboFlowRules);
+        // 熔断规则
+        final List<DegradeRule> dubboDegradeRules = new ArrayList<>();
+        final DegradeRule dubboInterfaceDegradeRule = new DegradeRule();
+        dubboInterfaceDegradeRule.setResource(DUBBO_INTERFACE_RESOURCE_NAME);
+        dubboInterfaceDegradeRule.setGrade(RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT);
+        // 2个异常数
+        dubboInterfaceDegradeRule.setCount(2);
+        // 时间窗口长度，单位为秒
+        dubboInterfaceDegradeRule.setTimeWindow(5);
+        dubboDegradeRules.add(dubboInterfaceDegradeRule);
+        DegradeRuleManager.loadRules(dubboDegradeRules);
+
+        DubboAdapterGlobalConfig.setConsumerFallback(
+                (invoker, invocation, ex) -> {
+                    throw new RuntimeException("fallback");
+                });
     }
 
     @GetMapping("/{name}")
     public ApiResult sayHello(@PathVariable("name") final String name){
-        //String hello = this.sayHelloByDubbo(name);
+        String hello = this.dubboServiceOne.sayHello(name);
         //final String hello = this.sayHelloByDubbo2Code(name);
-        final String hello = this.helloService.sayHello(name);
+        //final String hello = this.helloService.sayHello(name);
         return ApiResult.success(hello);
     }
 

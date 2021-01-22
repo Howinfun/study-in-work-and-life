@@ -1,6 +1,5 @@
 package com.winfun.service;
 
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import static com.winfun.controller.HelloController.RESOURCE_NAME;
 public class HelloServiceImpl implements HelloService{
 
     @Override
-    @SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
+    //@SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public String sayHello(String name) {
         return "hello "+name;
     }
