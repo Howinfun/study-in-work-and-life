@@ -2,7 +2,7 @@ package com.winfun.controller;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.adapter.dubbo.config.DubboAdapterGlobalConfig;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
@@ -10,6 +10,7 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.winfun.entity.pojo.ApiResult;
+import com.winfun.fallback.DefaultDubboFallback;
 import com.winfun.service.DubboServiceOne;
 import com.winfun.service.HelloService;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +78,7 @@ public class HelloController {
         dobboInterfaceFlowRule.setResource(DUBBO_INTERFACE_RESOURCE_NAME);
         dobboInterfaceFlowRule.setGrade(RuleConstant.FLOW_GRADE_QPS);
         // 20 QPS
-        dobboInterfaceFlowRule.setCount(20);
+        dobboInterfaceFlowRule.setCount(1);
         flowRules.add(dobboInterfaceFlowRule);
         // 熔断规则
         final DegradeRule dubboInterfaceDegradeRule = new DegradeRule();
@@ -90,10 +91,11 @@ public class HelloController {
         degradeRules.add(dubboInterfaceDegradeRule);
         FlowRuleManager.loadRules(flowRules);
         DegradeRuleManager.loadRules(degradeRules);
+        DubboAdapterGlobalConfig.setConsumerFallback(new DefaultDubboFallback());
     }
 
     @GetMapping("/{name}")
-    @SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
+    //@SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
         String hello = this.dubboServiceOne.sayHello(name);
         return ApiResult.success(hello);
