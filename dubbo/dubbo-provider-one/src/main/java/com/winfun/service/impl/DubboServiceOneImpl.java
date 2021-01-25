@@ -1,5 +1,6 @@
 package com.winfun.service.impl;
 
+import com.winfun.entity.pojo.ApiResult;
 import com.winfun.service.DubboServiceOne;
 import lombok.SneakyThrows;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -15,12 +16,13 @@ public class DubboServiceOneImpl implements DubboServiceOne {
      *  say hello
      * @author winfun
      * @param name name
-     * @return {@link String }
+     * @return {@link ApiResult<String> }
      **/
     @SneakyThrows
     @Override
-    public String sayHello(String name) {
+    public ApiResult<String> sayHello(String name) {
         // dubbo 接口默认超时时间为1s，我们这里直接休眠5s
-        return "hello "+name;
+        // Thread.sleep(5000);
+        return ApiResult.success("hello "+name);
     }
 }

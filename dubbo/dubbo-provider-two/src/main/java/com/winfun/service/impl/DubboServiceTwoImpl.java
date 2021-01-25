@@ -1,5 +1,6 @@
 package com.winfun.service.impl;
 
+import com.winfun.entity.pojo.ApiResult;
 import com.winfun.service.DubboServiceTwo;
 import org.apache.dubbo.config.annotation.DubboService;
 
@@ -15,10 +16,10 @@ public class DubboServiceTwoImpl implements DubboServiceTwo {
      *  say hi
      * @author winfun
      * @param name name
-     * @return {@link String }
+     * @return {@link ApiResult<String> }
      **/
     @Override
-    public String sayHi(String name) {
-        return "hi "+name;
+    public ApiResult<String> sayHi(String name) {
+        return ApiResult.success("hi "+name);
     }
 }

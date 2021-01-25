@@ -97,38 +97,37 @@ public class HelloController {
     @GetMapping("/{name}")
     //@SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
-        String hello = this.dubboServiceOne.sayHello(name);
-        return ApiResult.success(hello);
+        return this.dubboServiceOne.sayHello(name);
     }
 
     /***
      * 接入Sentinel方式：植入硬代码进行熔断限流
      * @author winfun
      * @param name name
-     * @return {@link String }
+     * @return {@link ApiResult<String> }
      **/
-    private String sayHelloByDubbo2Code(final String name) {
+    private ApiResult<String> sayHelloByDubbo2Code(final String name) {
 
-        String hello;
+        ApiResult result;
         try (Entry entry = SphU.entry(RESOURCE_NAME)){
-            hello = this.dubboServiceOne.sayHello(name);
+            result = this.dubboServiceOne.sayHello(name);
         }  catch (final BlockException e) {
             log.error("资源：{} 被流控了",RESOURCE_NAME);
-            hello = "block";
+            result = ApiResult.fail("block");
         } catch (final Exception e){
             log.error("资源：{} 被熔断了,message is {}",RESOURCE_NAME,e.getMessage());
-            hello = "fallback";
+            result = ApiResult.fail("fallback");
         }
-        return hello;
+        return result;
     }
 
     /**
      * Fallback 函数，函数签名与原函数一致或加一个 Throwable 类型的参数.
      * @param name
      * @param throwable
-     * @return
+     * @return {@link ApiResult<String> }
      */
-    public ApiResult sayHelloFallback(final String name, final Throwable throwable){
+    public ApiResult<String> sayHelloFallback(final String name, final Throwable throwable){
         log.error("资源：{} 被熔断了,message is {}",RESOURCE_NAME,throwable.getMessage());
         return ApiResult.fail("hello fallback");
     }
@@ -138,9 +137,9 @@ public class HelloController {
      * blockHandler 函数访问范围需要是 public，返回类型需要与原方法相匹配，参数类型需要和原方法相匹配并且最后加一个额外的参数，类型为 BlockException
      * @param name
      * @param exception
-     * @return
+     * @return {@link ApiResult<String> }
      */
-    public ApiResult sayHelloBlock(final String name, final BlockException exception){
+    public ApiResult<String> sayHelloBlock(final String name, final BlockException exception){
         log.error("资源：{} 被流控了",RESOURCE_NAME);
         return ApiResult.fail("hello block");
     }

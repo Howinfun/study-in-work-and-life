@@ -1,5 +1,7 @@
 package com.winfun.service;
 
+import com.winfun.entity.pojo.ApiResult;
+
 /**
  *
  * DubboServiceTwo
@@ -12,7 +14,7 @@ public interface DubboServiceTwo {
      *  say hi
      * @author winfun
      * @param name name
-     * @return {@link String }
+     * @return {@link ApiResult<String> }
      **/
-    String sayHi(String name);
+    ApiResult<String> sayHi(String name);
 }

@@ -2,13 +2,15 @@ package com.winfun.entity.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * Dubbo Api Request
  * @author winfun
  * @date 2020/10/30 2:12 下午
  **/
 @Data
-public class DubboRequestDTO {
+public class DubboRequestDTO implements Serializable {
 
     /**
      * 接口名称
