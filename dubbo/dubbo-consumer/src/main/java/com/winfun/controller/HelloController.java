@@ -2,7 +2,6 @@ package com.winfun.controller;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
-import com.alibaba.csp.sentinel.adapter.dubbo.config.DubboAdapterGlobalConfig;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
@@ -52,10 +51,9 @@ public class HelloController {
         final FlowRule flowRule = new FlowRule();
         flowRule.setResource(RESOURCE_NAME);
         flowRule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        // 20 QPS
-        flowRule.setCount(20);
+        // 1 QPS
+        flowRule.setCount(1);
         flowRules.add(flowRule);
-        FlowRuleManager.loadRules(flowRules);
         // 熔断规则
         final List<DegradeRule> degradeRules = new ArrayList<>();
         final DegradeRule degradeRule = new DegradeRule();
@@ -66,7 +64,6 @@ public class HelloController {
         // 时间窗口长度，单位为秒
         degradeRule.setTimeWindow(5);
         degradeRules.add(degradeRule);
-        DegradeRuleManager.loadRules(degradeRules);
 
         /**
          * 给dubbo接口设置流控，维度：接口或方法
@@ -74,18 +71,14 @@ public class HelloController {
          * 接口：com.winfun.service.DubboServiceOne
          * 方法：com.winfun.service.DubboServiceOne:sayHello(java.lang.String)
          */
-        // 初始化流控规则
-        final List<FlowRule> dubboFlowRules = new ArrayList<>();
         // 限流规则
         final FlowRule dobboInterfaceFlowRule = new FlowRule();
         dobboInterfaceFlowRule.setResource(DUBBO_INTERFACE_RESOURCE_NAME);
         dobboInterfaceFlowRule.setGrade(RuleConstant.FLOW_GRADE_QPS);
         // 20 QPS
         dobboInterfaceFlowRule.setCount(20);
-        dubboFlowRules.add(dobboInterfaceFlowRule);
-        FlowRuleManager.loadRules(dubboFlowRules);
+        flowRules.add(dobboInterfaceFlowRule);
         // 熔断规则
-        final List<DegradeRule> dubboDegradeRules = new ArrayList<>();
         final DegradeRule dubboInterfaceDegradeRule = new DegradeRule();
         dubboInterfaceDegradeRule.setResource(DUBBO_INTERFACE_RESOURCE_NAME);
         dubboInterfaceDegradeRule.setGrade(RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT);
@@ -93,32 +86,16 @@ public class HelloController {
         dubboInterfaceDegradeRule.setCount(2);
         // 时间窗口长度，单位为秒
         dubboInterfaceDegradeRule.setTimeWindow(5);
-        dubboDegradeRules.add(dubboInterfaceDegradeRule);
-        DegradeRuleManager.loadRules(dubboDegradeRules);
-
-        DubboAdapterGlobalConfig.setConsumerFallback(
-                (invoker, invocation, ex) -> {
-                    throw new RuntimeException("fallback");
-                });
+        degradeRules.add(dubboInterfaceDegradeRule);
+        FlowRuleManager.loadRules(flowRules);
+        DegradeRuleManager.loadRules(degradeRules);
     }
 
     @GetMapping("/{name}")
+    //@SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
         String hello = this.dubboServiceOne.sayHello(name);
-        //final String hello = this.sayHelloByDubbo2Code(name);
-        //final String hello = this.helloService.sayHello(name);
         return ApiResult.success(hello);
-    }
-
-
-    /***
-     *
-     * @author winfun
-     * @param name name
-     * @return {@link String }
-     **/
-    public String sayHelloByDubbo(final String name){
-        return this.dubboServiceOne.sayHello(name);
     }
 
     /***
@@ -140,5 +117,28 @@ public class HelloController {
             hello = "fallback";
         }
         return hello;
+    }
+
+    /**
+     * Fallback 函数，函数签名与原函数一致或加一个 Throwable 类型的参数.
+     * @param name
+     * @param throwable
+     * @return
+     */
+    public ApiResult sayHelloFallback(final String name, final Throwable throwable){
+        log.error("资源：{} 被熔断了,message is {}",RESOURCE_NAME,throwable.getMessage());
+        return ApiResult.fail("hello fallback");
+    }
+
+    /**
+     * BlockHandler 函数
+     * blockHandler 函数访问范围需要是 public，返回类型需要与原方法相匹配，参数类型需要和原方法相匹配并且最后加一个额外的参数，类型为 BlockException
+     * @param name
+     * @param exception
+     * @return
+     */
+    public ApiResult sayHelloBlock(final String name, final BlockException exception){
+        log.error("资源：{} 被流控了",RESOURCE_NAME);
+        return ApiResult.fail("hello block");
     }
 }

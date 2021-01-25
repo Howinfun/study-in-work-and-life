@@ -23,10 +23,11 @@ public class ServiceOneApplicationTests {
     @SneakyThrows
     @Test
     public void sayHello(){
-        while (true){
+        for (int i = 0; i < 100; i++) {
+            // 休眠500毫秒，即1秒两次调用，可以出发流控规则
+            Thread.sleep(500);
             MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/hello/winfun"))
                     .andReturn();
-            System.out.println(result.getResponse().getStatus());
             System.out.println(result.getResponse().getContentAsString());
         }
     }

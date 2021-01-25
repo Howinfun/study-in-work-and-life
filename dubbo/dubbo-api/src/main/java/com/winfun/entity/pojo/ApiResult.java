@@ -74,4 +74,21 @@ public class ApiResult<T> {
     public static ApiResult success(Object data){
         return new ApiResult(data);
     }
+
+    /**
+     * fail
+     * @return
+     */
+    public static ApiResult fail(){
+        return fail(null);
+    }
+
+    /**
+     * fail
+     * @param data
+     * @return
+     */
+    public static ApiResult fail(Object data){
+        return new ApiResult(ApiContants.FAIL,"fail",data);
+    }
 }
