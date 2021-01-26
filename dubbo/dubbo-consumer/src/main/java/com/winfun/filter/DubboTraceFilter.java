@@ -17,7 +17,6 @@ import org.apache.dubbo.rpc.RpcException;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * Dubbo Trace Filter
@@ -25,8 +24,13 @@ import java.util.stream.Collectors;
  * @date 2020/10/30 9:46 上午
  **/
 @Slf4j
-@Activate(order = 100,group = {Constants.PROVIDER_PROTOCOL,Constants.CONSUMER_PROTOCOL})
+@Activate(group = {Constants.PROVIDER_PROTOCOL,Constants.CONSUMER_PROTOCOL})
 public class DubboTraceFilter implements Filter {
+
+    public DubboTraceFilter(){
+        log.info("Dubbo trace filter initialized");
+    }
+
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         // 执行前

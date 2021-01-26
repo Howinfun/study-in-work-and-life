@@ -41,11 +41,11 @@
             <version>1.8.0</version>
         </dependency>
         <!-- sentinel dashboard -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-transport-simple-http</artifactId>
             <version>1.8.0</version>
-        </dependency>
+        </dependency>-->
         <!-- dubbo begin  -->
 		<dependency>
 			<groupId>org.apache.dubbo</groupId>

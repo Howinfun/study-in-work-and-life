@@ -2,6 +2,7 @@ package com.winfun.controller;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.adapter.dubbo.config.DubboAdapterGlobalConfig;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
@@ -51,15 +52,15 @@ public class HelloController {
     static{
         // 初始化流控规则
         final List<FlowRule> flowRules = new ArrayList<>();
+        final List<DegradeRule> degradeRules = new ArrayList<>();
         // 限流规则
         final FlowRule flowRule = new FlowRule();
         flowRule.setResource(RESOURCE_NAME);
         flowRule.setGrade(RuleConstant.FLOW_GRADE_QPS);
         // 1 QPS
-        flowRule.setCount(1);
+        flowRule.setCount(20);
         flowRules.add(flowRule);
         // 熔断规则
-        final List<DegradeRule> degradeRules = new ArrayList<>();
         final DegradeRule degradeRule = new DegradeRule();
         degradeRule.setResource(RESOURCE_NAME);
         degradeRule.setGrade(RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT);
@@ -99,7 +100,8 @@ public class HelloController {
     @GetMapping("/hello/{name}")
     //@SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
-        return this.dubboServiceOne.sayHello(name);
+        //return this.dubboServiceOne.sayHello(name);
+        return this.sayHelloByDubbo2Code(name);
     }
 
     @GetMapping("/hi/{name}")
@@ -116,7 +118,10 @@ public class HelloController {
     private ApiResult<String> sayHelloByDubbo2Code(final String name) {
 
         ApiResult result;
-        try (Entry entry = SphU.entry(RESOURCE_NAME)){
+        Entry entry = null;
+        // 务必保证 finally 会被执行
+        try {
+            entry = SphU.entry(RESOURCE_NAME);
             result = this.dubboServiceOne.sayHello(name);
         }  catch (final BlockException e) {
             log.error("资源：{} 被流控了",RESOURCE_NAME);
@@ -124,6 +129,13 @@ public class HelloController {
         } catch (final Exception e){
             log.error("资源：{} 被熔断了,message is {}",RESOURCE_NAME,e.getMessage());
             result = ApiResult.fail("fallback");
+            // 若需要配置降级规则，需要通过这种方式记录业务异常
+            Tracer.traceEntry(e, entry);
+        } finally {
+            // 务必保证 exit，务必保证每个 entry 与 exit 配对
+            if (entry != null) {
+                entry.exit();
+            }
         }
         return result;
     }

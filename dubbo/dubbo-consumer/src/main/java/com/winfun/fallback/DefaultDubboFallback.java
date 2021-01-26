@@ -25,6 +25,6 @@ public class DefaultDubboFallback implements DubboFallback {
     @Override
     public Result handle(Invoker<?> invoker, Invocation invocation, BlockException ex) {
 
-        return AsyncRpcResult.newDefaultAsyncResult(ApiResult.fail("被熔断限流了"), invocation);
+        return AsyncRpcResult.newDefaultAsyncResult(ApiResult.fail("SentinelDubboConsumerFilter-被熔断限流了"), invocation);
     }
 }

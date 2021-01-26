@@ -17,6 +17,6 @@ public class DubboServiceTwoMock implements DubboServiceTwo{
      **/
     @Override
     public ApiResult<String> sayHi(String name) {
-        return ApiResult.fail("Mock实现类降级了");
+        return ApiResult.fail("Mock实现类-熔断降级了");
     }
 }
