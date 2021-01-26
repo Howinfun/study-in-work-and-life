@@ -31,5 +31,4 @@ public class ServiceOneApplicationTests {
             System.out.println(result.getResponse().getContentAsString());
         }
     }
-
 }

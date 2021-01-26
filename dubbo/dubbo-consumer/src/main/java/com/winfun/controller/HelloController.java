@@ -9,15 +9,16 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+import com.alibaba.fastjson.JSON;
 import com.winfun.entity.pojo.ApiResult;
 import com.winfun.fallback.DefaultDubboFallback;
 import com.winfun.service.DubboServiceOne;
+import com.winfun.service.DubboServiceTwo;
 import com.winfun.service.HelloService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -30,15 +31,16 @@ import java.util.List;
  * @date 2020/10/29 5:12 下午
  **/
 @Slf4j
-@RequestMapping("/hello")
 @RestController
 public class HelloController {
 
     public static final String RESOURCE_NAME = "dubboServiceOne";
     public static final String DUBBO_INTERFACE_RESOURCE_NAME = "com.winfun.service.DubboServiceOne";
     public static final String DUBBO_INTERFACE_METHOD_RESOURCE_NAME = "com.winfun.service.DubboServiceOne:sayHello(java.lang.String)";
-    @DubboReference(check = false,lazy = true,retries = 1)
+    @DubboReference(check = false,lazy = true,retries = 0)
     private DubboServiceOne dubboServiceOne;
+    @DubboReference(check = false,lazy = true,retries = 0,mock = "true")
+    private DubboServiceTwo dubboServiceTwo;
     @Resource
     private HelloService helloService;
 
@@ -94,10 +96,15 @@ public class HelloController {
         DubboAdapterGlobalConfig.setConsumerFallback(new DefaultDubboFallback());
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/hello/{name}")
     //@SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
         return this.dubboServiceOne.sayHello(name);
+    }
+
+    @GetMapping("/hi/{name}")
+    public ApiResult sayHi(@PathVariable("name") final String name){
+        return this.dubboServiceTwo.sayHi(name);
     }
 
     /***
@@ -142,5 +149,9 @@ public class HelloController {
     public ApiResult<String> sayHelloBlock(final String name, final BlockException exception){
         log.error("资源：{} 被流控了",RESOURCE_NAME);
         return ApiResult.fail("hello block");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(JSON.toJSON(ApiResult.fail("熔断限流了")));
     }
 }
