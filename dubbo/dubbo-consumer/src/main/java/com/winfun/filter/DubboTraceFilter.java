@@ -55,7 +55,7 @@ public class DubboTraceFilter implements Filter {
         requestDTO.setInterfaceClass(invocation.getInvoker().getInterface().getName());
         requestDTO.setMethodName(invocation.getMethodName());
         requestDTO.setArgs(getArgs(invocation));
-        log.info("call Dubbo Api start , request is {}",requestDTO);
+        //log.info("call Dubbo Api start , request is {}",requestDTO);
     }
 
     /***
@@ -71,7 +71,7 @@ public class DubboTraceFilter implements Filter {
         responseDTO.setMethodName(invocation.getMethodName());
         responseDTO.setResult(JSON.toJSONString(result.getValue()));
         responseDTO.setSpendTime(spendTime);
-        log.info("call Dubbo Api end , response is {}",responseDTO);
+        //log.info("call Dubbo Api end , response is {}",responseDTO);
     }
 
     /***
