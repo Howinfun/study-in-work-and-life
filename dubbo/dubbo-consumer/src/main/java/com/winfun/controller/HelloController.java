@@ -3,6 +3,7 @@ package com.winfun.controller;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
@@ -100,10 +101,10 @@ public class HelloController {
     }
 
     @GetMapping("/hello/{name}")
-    //@SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
+    @SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
-        //return this.dubboServiceOne.sayHello(name);
-        return this.sayHelloByDubbo2Code(name);
+        return this.dubboServiceOne.sayHello(name);
+        //return this.sayHelloByDubbo2Code(name);
     }
 
     @GetMapping("/hi/{name}")
@@ -128,13 +129,13 @@ public class HelloController {
         }  catch (BlockException e) {
             if (e instanceof DegradeException){
                 log.error("资源：{} 被熔断了,message is {}",RESOURCE_NAME,e.getMessage());
-                result = ApiResult.fail("fallback");
+                result = ApiResult.fail("hello fallback");
             }else {
                 log.error("资源：{} 被流控了",RESOURCE_NAME);
-                result = ApiResult.fail("block");
+                result = ApiResult.fail("hello block");
             }
         } catch (Exception e){
-            log.error("业务处理发生异常,exception is {}",e.getMessage());
+            log.error("资源：{} 发生异常,message is {}",RESOURCE_NAME,e.getMessage());
             // 若需要配置降级规则，需要通过这种方式记录业务异常
             Tracer.traceEntry(e, entry);
             result = ApiResult.fail("exception");
@@ -155,19 +156,26 @@ public class HelloController {
      * @return {@link ApiResult<String> }
      */
     public ApiResult<String> sayHelloFallback(final String name, final Throwable throwable){
-        log.error("资源：{} 被熔断了,message is {}",RESOURCE_NAME,throwable.getMessage());
-        return ApiResult.fail("hello fallback");
+        log.error("资源：{} 发生异常,message is {}",RESOURCE_NAME,throwable.getMessage());
+        return ApiResult.fail("hello exception");
     }
 
     /**
      * BlockHandler 函数
      * blockHandler 函数访问范围需要是 public，返回类型需要与原方法相匹配，参数类型需要和原方法相匹配并且最后加一个额外的参数，类型为 BlockException
      * @param name
-     * @param exception
+     * @param e
      * @return {@link ApiResult<String> }
      */
-    public ApiResult<String> sayHelloBlock(final String name, final BlockException exception){
-        log.error("资源：{} 被流控了",RESOURCE_NAME);
-        return ApiResult.fail("hello block");
+    public ApiResult<String> sayHelloBlock(final String name, final BlockException e){
+        ApiResult<String> result;
+        if (e instanceof DegradeException){
+            log.error("资源：{} 被熔断了,message is {}",RESOURCE_NAME,e.getMessage());
+            result = ApiResult.fail("hello fallback");
+        }else {
+            log.error("资源：{} 被流控了",RESOURCE_NAME);
+            result = ApiResult.fail("hello block");
+        }
+        return result;
     }
 }
