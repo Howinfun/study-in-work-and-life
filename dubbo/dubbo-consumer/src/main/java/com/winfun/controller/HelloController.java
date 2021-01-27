@@ -134,7 +134,7 @@ public class HelloController {
                 result = ApiResult.fail("block");
             }
         } catch (Exception e){
-            log.error("业务处理发生异常");
+            log.error("业务处理发生异常,exception is {}",e.getMessage());
             // 若需要配置降级规则，需要通过这种方式记录业务异常
             Tracer.traceEntry(e, entry);
             result = ApiResult.fail("exception");
