@@ -38,7 +38,8 @@ public class HelloController {
     public static final String RESOURCE_NAME = "dubboServiceOne";
     public static final String DUBBO_INTERFACE_RESOURCE_NAME = "com.winfun.service.DubboServiceOne";
     public static final String DUBBO_INTERFACE_METHOD_RESOURCE_NAME = "com.winfun.service.DubboServiceOne:sayHello(java.lang.String)";
-    @DubboReference(check = false,lazy = true,retries = 0,mock = "return {\"code\":1,\"message\":\"服务异常\"}")
+    //@DubboReference(check = false,lazy = true,retries = 0,mock = "return {\"code\":1,\"message\":\"服务异常\"}")
+    @DubboReference(check = false,lazy = true,retries = 0,mock = "true")
     private DubboServiceOne dubboServiceOne;
     @DubboReference(check = false,lazy = true,retries = 0)
     private DubboServiceTwo dubboServiceTwo;
@@ -109,8 +110,8 @@ public class HelloController {
     @GetMapping("/hello/{name}")
     //@SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
-        //return this.dubboServiceOne.sayHello(name);
-        return this.sayHelloByDubbo2Code(name);
+        return this.dubboServiceOne.sayHello(name);
+        //return this.sayHelloByDubbo2Code(name);
     }
 
     @GetMapping("/hi/{name}")
