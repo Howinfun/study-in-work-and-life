@@ -3,14 +3,17 @@ package com.hyf.facebook.demo.conversions.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 参数：https://developers.facebook.com/docs/marketing-api/conversions-api/parameters
  * @author winfun
  * @date 2021/2/1 3:22 下午
  **/
 @Data
-public class FacebookConversionData {
+public class FacebookConversionRequest implements Serializable {
 
+    private static final long serialVersionUID = 459158464533612095L;
     /**
      * A Facebook pixel Standard Event or Custom Event name. This field is used to deduplicate events sent by both Facebook Pixel and Conversions API. event_id is also used in deduplication.
      * Required

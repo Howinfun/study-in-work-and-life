@@ -3,14 +3,17 @@ package com.hyf.facebook.demo.conversions.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  *
  * @author winfun
  * @date 2021/2/1 3:24 下午
  **/
 @Data
-public class UserData {
+public class UserData implements Serializable {
 
+    private static final long serialVersionUID = -9056976011843117154L;
     /**
      * The IP address of the browser corresponding to the event.
      * Do not hash

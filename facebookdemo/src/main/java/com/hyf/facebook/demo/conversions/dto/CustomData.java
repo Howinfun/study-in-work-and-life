@@ -3,6 +3,7 @@ package com.hyf.facebook.demo.conversions.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,8 +12,9 @@ import java.util.List;
  * @date 2021/2/1 3:35 下午
  **/
 @Data
-public class CustomData {
+public class CustomData implements Serializable {
 
+    private static final long serialVersionUID = 4946721771345157092L;
     /**
      * A numeric value associated with this event. This could be a monetary value or a value in some other metric. Example: 142.54.
      */
@@ -83,7 +85,8 @@ public class CustomData {
     private String deliveryCategory;
 
     @Data
-    static class Content{
+    static class Content implements Serializable{
+        private static final long serialVersionUID = 5657280217026510497L;
         private String id;
         private Integer quantity;
         @JsonProperty("item_price")
