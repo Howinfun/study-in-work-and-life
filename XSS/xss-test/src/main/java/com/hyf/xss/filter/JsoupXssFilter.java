@@ -2,6 +2,7 @@ package com.hyf.xss.filter;
 
 import com.hyf.xss.constants.JsoupXssFilterConstant;
 import com.hyf.xss.wrapper.JsoupXssHttpServletRequestWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.Filter;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
  * @Author: winfun
  * @Date: 2020/12/23 11:21 上午
  **/
+@Slf4j
 public class JsoupXssFilter implements Filter {
 
     /**
@@ -32,7 +34,9 @@ public class JsoupXssFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig){
-
+        if(log.isDebugEnabled()){
+            log.debug("JsoupXssFilter init....");
+        }
         String temp = filterConfig.getInitParameter(JsoupXssFilterConstant.EXCLUDES);
         if (StringUtils.isNotBlank(temp)) {
             String[] url = temp.split(",");
@@ -44,14 +48,17 @@ public class JsoupXssFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException,
-                                                                                                     ServletException {
+                                                                                                                         ServletException {
+        if(log.isDebugEnabled()){
+            log.debug("JsoupXssFilter open....");
+        }
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String url = request.getServletPath();
         if (handleExcludeUrls(url)){
             filterChain.doFilter(request, response);
         }else {
-            System.out.println("JsoupXssFilter has doFilter,the request url is "+url);
+            log.info("JsoupXssFilter has doFilter,the request url is {}",url);
             JsoupXssHttpServletRequestWrapper xssRequest =
                     new JsoupXssHttpServletRequestWrapper(request, JsoupXssFilterConstant.ENCODING);
             filterChain.doFilter(xssRequest, response);
@@ -80,6 +87,6 @@ public class JsoupXssFilter implements Filter {
     }
 
     @Override
-    public void destroy() {}  
-  
+    public void destroy() {}
+
 }

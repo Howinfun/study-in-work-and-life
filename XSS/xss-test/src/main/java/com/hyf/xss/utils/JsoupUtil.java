@@ -13,12 +13,9 @@ public class JsoupUtil {
 
     private static final String HTTPS = "https://";
     /**
-     * 默认使用自带的 basicWithImages 白名单
-     * 允许的便签有a,b,blockquote,br,cite,code,dd,dl,dt,em,i,li,ol,p,pre,q,small,span,
-     * strike,strong,sub,sup,u,ul,img
-     * 以及a标签的href,img标签的src,align,alt,height,width,title属性
+     * 默认使用Jsoup自带的relaxed白名单
      */
-    private static final Whitelist WHITE_LIST = Whitelist.basicWithImages();
+    private static final Whitelist WHITE_LIST = Whitelist.relaxed();
     /** 配置过滤化参数,不对代码进行格式化 */
     private static final Document.OutputSettings OUTPUT_SETTINGS = new Document.OutputSettings().prettyPrint(false);
     static {
@@ -33,6 +30,7 @@ public class JsoupUtil {
          */
         WHITE_LIST.preserveRelativeLinks(true);
     }
+
 
     /***
      * XSS清洗
@@ -77,6 +75,6 @@ public class JsoupUtil {
      * @return {@link String }
      **/
     public static String clean(String content, String baseUri, Whitelist whitelist, Document.OutputSettings outputSettings){
-        return Jsoup.clean(content,baseUri,whitelist,outputSettings);
+        return Jsoup.clean(content, baseUri, whitelist, outputSettings);
     }
 }
