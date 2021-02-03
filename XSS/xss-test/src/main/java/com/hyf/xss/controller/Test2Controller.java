@@ -19,32 +19,32 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test2Controller {
 
     @GetMapping("/get")
-    public String hello(@RequestParam("name") String name,@RequestParam("sex") String sex){
-        return name+"-"+sex;
+    public String hello(@RequestParam("name") String name, @RequestParam("sex") String sex) {
+        return name + "-" + sex;
     }
 
     @PostMapping("/post")
-    public String post(@RequestBody Test test){
+    public String post(@RequestBody Test test) {
         return test.toString();
     }
 
     @PutMapping("/put")
-    public String put(Test test){
+    public String put(Test test) {
         return test.toString();
     }
 
     @GetMapping("/exclude/get")
-    public String hello2(@RequestParam("name") String name){
+    public String hello2(@RequestParam("name") String name) {
         return name;
     }
 
     @PostMapping("/exclude/post")
-    public String post2(@RequestBody Test test){
+    public String post2(@RequestBody Test test) {
         return test.toString();
     }
 
     @PutMapping("/exclude/put")
-    public String put2(Test test){
+    public String put2(Test test) {
         return test.toString();
     }
 }
