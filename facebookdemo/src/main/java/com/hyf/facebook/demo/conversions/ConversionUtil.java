@@ -1,5 +1,6 @@
 package com.hyf.facebook.demo.conversions;
 
+import cn.hutool.core.thread.ThreadUtil;
 import com.hyf.facebook.demo.contants.HttpConstant;
 import com.hyf.facebook.demo.conversions.dto.FacebookConversionRequest;
 import com.hyf.facebook.demo.conversions.dto.FacebookConversionResponse;
@@ -7,6 +8,9 @@ import com.hyf.facebook.demo.utils.http.OkHttpClientUtils;
 import com.hyf.facebook.demo.utils.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -28,21 +32,21 @@ public class ConversionUtil {
      * @param data data
      * @return {@link Void }
      **/
-    public Integer addEvent(String pixelId, String accessToken, FacebookConversionRequest data){
+    public Integer addEvent(String pixelId, String accessToken, FacebookConversionRequest data) {
         String url = API + HttpConstant.PATH_PREFIX + API_VERSION + HttpConstant.PATH_PREFIX + pixelId +
                 HttpConstant.PATH_PREFIX + "events";
         try (Response response = OkHttpClientUtils.post(url, data)) {
             if (response.isSuccessful()) {
                 String result = response.body().string();
-                log.info("ConversionUtil#addEvent result is {}",result);
+                log.info("ConversionUtil#addEvent result is {}", result);
                 FacebookConversionResponse conversionResponse = JsonUtil.fromStr(result,
                                                                                  FacebookConversionResponse.class);
                 return conversionResponse.getEventsReceived();
-            }else {
-                log.error("ConversionUtil#addEvent fail,data is {},accessToken is {}",data,accessToken);
+            } else {
+                log.error("ConversionUtil#addEvent fail,data is {},accessToken is {}", data, accessToken);
             }
         } catch (Exception e) {
-            log.error("ConversionUtil#addEvent throws exception，data is {},message is {}",data,e.getMessage());
+            log.error("ConversionUtil#addEvent throws exception，data is {},message is {}", data, e.getMessage());
         }
         return 0;
     }
@@ -93,20 +97,35 @@ public class ConversionUtil {
             }
 
         }*/
-        String url = "https://graph.facebook.com/v9.0/act_3639974596038818/campaigns?access_token=EAAK01SZAXzGEBAOiq9r3ZAG5wZAcGeVTf34NaFr0yGPXETV1YpgoZCKuW4HG3Yij4OMwu3ith4kABMSWPjzG76QzBI1mIWXPSrdZAdJF2hM65Cumj6GhZCOYJ6xZCoDv4Bge9OZCdbJsV2Dgmeys0qNv7ZAdJfbpeAXpGtfhjgNuab3ZChFg4E2iasZCfxNuWdEajCnJ7ZCmRuDsgAZDZD";
-        for (int i = 0; i < 50000; i++) {
-            try {
-                Thread.sleep(1000);
-                Response response = OkHttpClientUtils.get(url);
+        String token =
+                "";
+        String url = "https://graph.facebook.com/v9.0/{object}/campaigns?access_token=" + token;
+        int count = 0;
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = start.plusDays(1L);
+        while (true){
+            LocalDateTime now = LocalDateTime.now();
+            log.info("开始第{}波刷API, now is {}",++count,now);
+            for(int i = 0; i< 299;i++) {
+                try {
+                    Thread.sleep(1000);
+                    Response response = OkHttpClientUtils.get(url);
                     String result = response.body().string();
                     if (response.isSuccessful()) {
-                        log.info("第{}次调用成功，result is {}",i,result);
-                    }else {
+                        log.info("第{}个token, 第{}次调用成功，result is {}", i, result);
+                    } else {
                         log.error("call fail,the result is {}", result);
                         break;
                     }
-            }catch (Exception e){
-                log.error("调用失败！");
+                } catch (Exception e) {
+                    log.error("调用失败！");
+                    break;
+                }
+            }
+            // 休眠1.5小时，再重新刷
+            ThreadUtil.sleep(1.5, TimeUnit.HOURS);
+            // 刷到明天
+            if (now.isAfter(end)){
                 break;
             }
         }

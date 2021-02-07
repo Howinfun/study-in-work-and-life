@@ -4,7 +4,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.winfun.controller.HelloController.RESOURCE_NAME;
+import static com.winfun.controller.SentinelCoreHelloController.RESOURCE_NAME;
 
 /**
  *
