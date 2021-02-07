@@ -1,16 +1,12 @@
 package com.hyf.facebook.demo.conversions;
 
 import com.hyf.facebook.demo.contants.HttpConstant;
-import com.hyf.facebook.demo.conversions.dto.FacebookConversionData;
 import com.hyf.facebook.demo.conversions.dto.FacebookConversionRequest;
 import com.hyf.facebook.demo.conversions.dto.FacebookConversionResponse;
-import com.hyf.facebook.demo.conversions.dto.UserData;
 import com.hyf.facebook.demo.utils.http.OkHttpClientUtils;
 import com.hyf.facebook.demo.utils.json.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
-
-import java.util.Collections;
 
 /**
  *
@@ -70,7 +66,7 @@ public class ConversionUtil {
          *     "test_event_code": ""
          * }'
          */
-        String pixelId = "";
+        /*String pixelId = "";
         String accessToken = "";
         FacebookConversionRequest request = new FacebookConversionRequest();
         request.setAccessToken(accessToken);
@@ -96,6 +92,23 @@ public class ConversionUtil {
                 log.error("调用失败！");
             }
 
+        }*/
+        String url = "https://graph.facebook.com/v9.0/act_3639974596038818/campaigns?access_token=EAAK01SZAXzGEBAOiq9r3ZAG5wZAcGeVTf34NaFr0yGPXETV1YpgoZCKuW4HG3Yij4OMwu3ith4kABMSWPjzG76QzBI1mIWXPSrdZAdJF2hM65Cumj6GhZCOYJ6xZCoDv4Bge9OZCdbJsV2Dgmeys0qNv7ZAdJfbpeAXpGtfhjgNuab3ZChFg4E2iasZCfxNuWdEajCnJ7ZCmRuDsgAZDZD";
+        for (int i = 0; i < 50000; i++) {
+            try {
+                Thread.sleep(1000);
+                Response response = OkHttpClientUtils.get(url);
+                    String result = response.body().string();
+                    if (response.isSuccessful()) {
+                        log.info("第{}次调用成功，result is {}",i,result);
+                    }else {
+                        log.error("call fail,the result is {}", result);
+                        break;
+                    }
+            }catch (Exception e){
+                log.error("调用失败！");
+                break;
+            }
         }
     }
 }
