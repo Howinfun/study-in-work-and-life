@@ -37,7 +37,7 @@ public class FacebookUtil {
     private static final String SUCCESS = "success";
     /** result */
     private static final String RESULT = "result";
-    private String url = "https://graph.facebook.com/v2.6/me/messenger_profile";
+    private String url = "https://graph.facebook.com/v9.0/me/messenger_profile";
 
     /**
      * 是否设置了 getStarted
