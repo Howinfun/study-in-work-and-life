@@ -99,7 +99,7 @@ public class ConversionUtil {
         }*/
         String token =
                 "";
-        String url = "https://graph.facebook.com/v9.0/{object}/campaigns?access_token=" + token;
+        String url = "https://graph.facebook.com/v9.0/{id}/campaigns?access_token=" + token;
         int count = 0;
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusDays(1L);
@@ -108,11 +108,12 @@ public class ConversionUtil {
             log.info("开始第{}波刷API, now is {}",++count,now);
             for(int i = 0; i< 299;i++) {
                 try {
-                    Thread.sleep(1000);
+                    // 每隔一秒调用接口
+                    ThreadUtil.sleep(1,TimeUnit.SECONDS);
                     Response response = OkHttpClientUtils.get(url);
                     String result = response.body().string();
                     if (response.isSuccessful()) {
-                        log.info("第{}个token, 第{}次调用成功，result is {}", i, result);
+                        log.info("第{}次调用成功，result is {}", i, result);
                     } else {
                         log.error("call fail,the result is {}", result);
                         break;
