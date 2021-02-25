@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-@MapperScan("com.winfun")
+@MapperScan("com.winfun.mapper")
 @EnableAspectJAutoProxy
 @SpringBootApplication
 public class LogRecordApplication {

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.winfun.entity.LogRecord;
 import com.winfun.entity.enums.LogRecordEnum;
-import com.winfun.mapper.LogRecordMapper;
+import com.winfun.service.LogRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -40,7 +40,7 @@ public class LogRecordAspect {
     @Autowired
     ApplicationContext applicationContext;
     @Resource
-    private LogRecordMapper logRecordMapper;
+    private LogRecordService logRecordService;
 
     @Pointcut(value = "@annotation(com.winfun.aop.LogRecordAnno)")
     public void pointcut(){}
@@ -92,7 +92,7 @@ public class LogRecordAspect {
                 break;
         }
         // 插入记录
-        logRecordMapper.insert(logRecord);
+        this.logRecordService.insertLogRecord(logRecord);
     }
 
     /**
@@ -108,6 +108,7 @@ public class LogRecordAspect {
         Method targetMethod = pjp.getTarget().getClass().getMethod(method.getName(), method.getParameterTypes());
         return targetMethod;
     }
+
     /**
      * 将方法的参数名和参数值绑定
      *

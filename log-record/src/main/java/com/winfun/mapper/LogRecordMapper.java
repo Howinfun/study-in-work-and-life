@@ -3,7 +3,6 @@ package com.winfun.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.winfun.entity.LogRecord;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -12,6 +11,5 @@ import org.springframework.stereotype.Component;
  * @date 2020/11/3 5:20 下午
  **/
 @Mapper
-@Component("LogRecordMapper")
 public interface LogRecordMapper extends BaseMapper<LogRecord> {
 }
