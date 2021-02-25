@@ -20,6 +20,7 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface LogRecordAnno {
 
-    String mapperName();
+    Class mapperName();
     LogRecordEnum logType();
+    String id();
 }

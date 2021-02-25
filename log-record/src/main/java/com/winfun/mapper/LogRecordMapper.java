@@ -1,7 +1,7 @@
 package com.winfun.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.winfun.aop.LogRecordAnno;
+import com.winfun.entity.LogRecord;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
@@ -13,5 +13,5 @@ import org.springframework.stereotype.Component;
  **/
 @Mapper
 @Component("LogRecordMapper")
-public interface LogRecordMapper extends BaseMapper<LogRecordAnno> {
+public interface LogRecordMapper extends BaseMapper<LogRecord> {
 }
