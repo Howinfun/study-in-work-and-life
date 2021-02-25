@@ -1,1 +1,0 @@
-dubboLogFilter=com.winfun.filter.DubboTraceFilter
