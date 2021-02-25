@@ -21,6 +21,7 @@ import java.lang.annotation.Target;
 public @interface LogRecordAnno {
 
     Class mapperName();
-    LogRecordEnum logType();
-    String id();
+    LogRecordEnum logType() default LogRecordEnum.INSERT;
+    String id() default "";
+    String operator() default "";
 }

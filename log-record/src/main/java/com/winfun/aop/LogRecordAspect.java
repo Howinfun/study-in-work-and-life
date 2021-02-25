@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 
 /**
  * LogRecord Aspect
@@ -42,29 +42,31 @@ public class LogRecordAspect {
     @Resource
     private LogRecordService logRecordService;
 
-    @Pointcut(value = "@annotation(com.winfun.aop.LogRecordAnno)")
-    public void pointcut(){}
-
     @Around("@annotation(logRecordAnno))")
-    public void around(ProceedingJoinPoint point, LogRecordAnno logRecordAnno) throws Throwable {
+    public Object around(ProceedingJoinPoint point, LogRecordAnno logRecordAnno) throws Throwable {
 
         Method method = this.getMethod(point);
         Object[] args = point.getArgs();
         Class mapperClass = logRecordAnno.mapperName();
         BaseMapper mapper = (BaseMapper) applicationContext.getBean(mapperClass);
         LogRecordEnum logRecordEnum = logRecordAnno.logType();
+        // 日志记录
         LogRecord logRecord = new LogRecord();
         EvaluationContext context = this.bindParam(method, args);
-        Expression expression = parser.parseExpression(logRecordAnno.id());
+        Expression idExpression = parser.parseExpression(logRecordAnno.id());
         String id;
         Object beforeRecord;
         Object afterRecord;
+        Expression operatorExpression = parser.parseExpression(logRecordAnno.operator());
+        String operator = (String) operatorExpression.getValue(context);
+        logRecord.setOperator(operator);
+        Object proceedResult = null;
         switch (logRecordEnum){
             case INSERT:
                 logRecord.setLogType(LogRecordEnum.INSERT);
-                point.proceed();
+                proceedResult = point.proceed();
                 //根据spel表达式获取id
-                id = (String) expression.getValue(context);
+                id = (String) idExpression.getValue(context);
                 Object result = mapper.selectById(id);
                 logRecord.setBeforeRecord("");
                 logRecord.setAfterRecord(JSON.toJSONString(result));
@@ -72,9 +74,9 @@ public class LogRecordAspect {
             case UPDATE:
                 logRecord.setLogType(LogRecordEnum.UPDATE);
                 //根据spel表达式获取id
-                id = (String) expression.getValue(context);
+                id = (String) idExpression.getValue(context);
                 beforeRecord = mapper.selectById(id);
-                point.proceed();
+                proceedResult = point.proceed();
                 afterRecord = mapper.selectById(id);
                 logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
                 logRecord.setAfterRecord(JSON.toJSONString(afterRecord));
@@ -82,9 +84,9 @@ public class LogRecordAspect {
             case DELETE:
                 logRecord.setLogType(LogRecordEnum.DELETE);
                 //根据spel表达式获取id
-                id = (String) expression.getValue(context);
+                id = (String) idExpression.getValue(context);
                 beforeRecord = mapper.selectById(id);
-                point.proceed();
+                proceedResult = point.proceed();
                 logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
                 logRecord.setAfterRecord("");
                 break;
@@ -92,7 +94,9 @@ public class LogRecordAspect {
                 break;
         }
         // 插入记录
+        logRecord.setCreateTime(LocalDateTime.now());
         this.logRecordService.insertLogRecord(logRecord);
+        return proceedResult;
     }
 
     /**
