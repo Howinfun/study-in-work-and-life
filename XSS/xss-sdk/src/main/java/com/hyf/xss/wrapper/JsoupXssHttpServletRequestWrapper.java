@@ -70,6 +70,13 @@ public class JsoupXssHttpServletRequestWrapper extends HttpServletRequestWrapper
         }
 
         /**
+         * 小于号处理
+         */
+        body = body.replaceAll("<","&lt;");
+        body = body.replaceAll("&lt;script","<script");
+        body = body.replaceAll("&lt;/script","</script");
+
+        /**
          * 双引号转义处理（富文本）
          * 因为 Jsoup 对双引号的转义处理会出现误判现象:
          * 情况一：标签属性
