@@ -48,27 +48,45 @@ public class LogRecordAspect {
     @Around("@annotation(logRecordAnno))")
     public void around(ProceedingJoinPoint point, LogRecordAnno logRecordAnno) throws Throwable {
 
+        Method method = this.getMethod(point);
         Object[] args = point.getArgs();
-        Class mapperName = logRecordAnno.mapperName();
-        BaseMapper mapper = (BaseMapper) applicationContext.getBean(mapperName);
+        Class mapperClass = logRecordAnno.mapperName();
+        BaseMapper mapper = (BaseMapper) applicationContext.getBean(mapperClass);
         LogRecordEnum logRecordEnum = logRecordAnno.logType();
         LogRecord logRecord = new LogRecord();
+        EvaluationContext context = this.bindParam(method, args);
+        Expression expression = parser.parseExpression(logRecordAnno.id());
+        String id;
+        Object beforeRecord;
+        Object afterRecord;
         switch (logRecordEnum){
             case INSERT:
                 logRecord.setLogType(LogRecordEnum.INSERT);
                 point.proceed();
-                //根据spel表达式获取值
-                Method method = this.getMethod(point);
-                EvaluationContext context = this.bindParam(method, args);
-                Expression expression = parser.parseExpression(logRecordAnno.id());
-                String id = (String) expression.getValue(context);
-                logRecord.setBeforeRecord("");
+                //根据spel表达式获取id
+                id = (String) expression.getValue(context);
                 Object result = mapper.selectById(id);
+                logRecord.setBeforeRecord("");
                 logRecord.setAfterRecord(JSON.toJSONString(result));
                 break;
             case UPDATE:
+                logRecord.setLogType(LogRecordEnum.UPDATE);
+                //根据spel表达式获取id
+                id = (String) expression.getValue(context);
+                beforeRecord = mapper.selectById(id);
+                point.proceed();
+                afterRecord = mapper.selectById(id);
+                logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
+                logRecord.setAfterRecord(JSON.toJSONString(afterRecord));
                 break;
             case DELETE:
+                logRecord.setLogType(LogRecordEnum.DELETE);
+                //根据spel表达式获取id
+                id = (String) expression.getValue(context);
+                beforeRecord = mapper.selectById(id);
+                point.proceed();
+                logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
+                logRecord.setAfterRecord("");
                 break;
             default:
                 break;
