@@ -20,8 +20,37 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface LogRecordAnno {
 
+    /**
+     * 日志类型一：记录记录实体
+     * Mapper Class，需要配合 MybatisPlus 使用
+     */
     Class mapperName();
-    LogRecordEnum logType() default LogRecordEnum.INSERT;
+
+    /**
+     * 日志类型一：记录记录实体
+     * 主键
+     */
     String id() default "";
+
+    /**
+     * 日志类型
+     */
+    LogRecordEnum logType() default LogRecordEnum.INSERT;
+
+    /**
+     * 操作者
+     */
     String operator() default "";
+
+    /**
+     * 日志类型二：记录日志信息
+     * 成功信息
+     */
+    String successMsg() default "";
+
+    /**
+     * 日志类型二：记录日志信息
+     * 失败信息
+     */
+    String errorMsg() default "";
 }

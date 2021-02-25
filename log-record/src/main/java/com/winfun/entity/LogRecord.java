@@ -9,6 +9,8 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * LogRecord
@@ -45,4 +47,21 @@ public class LogRecord implements Serializable {
      * 创建时间
      */
     private LocalDateTime createTime;
+    /**
+     * 成功消息
+     */
+    private String successMsg;
+    /**
+     * 失败消息
+     */
+    private String errorMsg;
+
+    public static void main(String[] args) {
+        String str = "hahah{{#user.id}},xixixi{{#operator}}";
+        Pattern pattern = Pattern.compile("(?<=\\{\\{)(.+?)(?=}})");
+        Matcher matcher = pattern.matcher(str);
+        while(matcher.find()){
+            System.out.println(matcher.group());
+        }
+    }
 }

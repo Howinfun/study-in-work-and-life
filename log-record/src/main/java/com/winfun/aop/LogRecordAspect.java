@@ -23,6 +23,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * LogRecord Aspect
@@ -32,6 +34,8 @@ import java.time.LocalDateTime;
 @Slf4j
 @Aspect
 public class LogRecordAspect {
+
+    private static final Pattern PATTERN = Pattern.compile("(?<=\\{\\{)(.+?)(?=}})");
 
     @Value("${log.record.type}")
     private String type;
@@ -55,45 +59,67 @@ public class LogRecordAspect {
         // 日志记录
         LogRecord logRecord = new LogRecord();
         EvaluationContext context = this.bindParam(method, args);
-        Expression idExpression = parser.parseExpression(logRecordAnno.id());
-        String id;
-        Object beforeRecord;
-        Object afterRecord;
-        Expression operatorExpression = parser.parseExpression(logRecordAnno.operator());
-        String operator = (String) operatorExpression.getValue(context);
+        // 获取操作者
+        String operator = this.getOperator(logRecordAnno.operator(),context);
         logRecord.setOperator(operator);
         Object proceedResult = null;
-        switch (logRecordEnum){
-            case INSERT:
-                logRecord.setLogType(LogRecordEnum.INSERT);
-                proceedResult = point.proceed();
-                //根据spel表达式获取id
-                id = (String) idExpression.getValue(context);
-                Object result = mapper.selectById(id);
-                logRecord.setBeforeRecord("");
-                logRecord.setAfterRecord(JSON.toJSONString(result));
-                break;
-            case UPDATE:
-                logRecord.setLogType(LogRecordEnum.UPDATE);
-                //根据spel表达式获取id
-                id = (String) idExpression.getValue(context);
-                beforeRecord = mapper.selectById(id);
-                proceedResult = point.proceed();
-                afterRecord = mapper.selectById(id);
-                logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
-                logRecord.setAfterRecord(JSON.toJSONString(afterRecord));
-                break;
-            case DELETE:
-                logRecord.setLogType(LogRecordEnum.DELETE);
-                //根据spel表达式获取id
-                id = (String) idExpression.getValue(context);
-                beforeRecord = mapper.selectById(id);
-                proceedResult = point.proceed();
-                logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
-                logRecord.setAfterRecord("");
-                break;
-            default:
-                break;
+        if ("record".equals(this.type)){
+            String id;
+            Object beforeRecord;
+            Object afterRecord;
+            switch (logRecordEnum){
+                case INSERT:
+                    logRecord.setLogType(LogRecordEnum.INSERT);
+                    proceedResult = point.proceed();
+                    //根据spel表达式获取id
+                    id = (String) this.getId(logRecordAnno.id(), context);
+                    Object result = mapper.selectById(id);
+                    logRecord.setBeforeRecord("");
+                    logRecord.setAfterRecord(JSON.toJSONString(result));
+                    break;
+                case UPDATE:
+                    logRecord.setLogType(LogRecordEnum.UPDATE);
+                    //根据spel表达式获取id
+                    id = (String) this.getId(logRecordAnno.id(), context);
+                    beforeRecord = mapper.selectById(id);
+                    proceedResult = point.proceed();
+                    afterRecord = mapper.selectById(id);
+                    logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
+                    logRecord.setAfterRecord(JSON.toJSONString(afterRecord));
+                    break;
+                case DELETE:
+                    logRecord.setLogType(LogRecordEnum.DELETE);
+                    //根据spel表达式获取id
+                    id = (String) this.getId(logRecordAnno.id(), context);
+                    beforeRecord = mapper.selectById(id);
+                    proceedResult = point.proceed();
+                    logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
+                    logRecord.setAfterRecord("");
+                    break;
+                default:
+                    break;
+            }
+        }else {
+            String successMsg = logRecordAnno.successMsg();
+            String errorMsg = logRecordAnno.errorMsg();
+            // 对成功信息和失败信息做表达式提取
+            Matcher successMatcher = PATTERN.matcher(successMsg);
+            while(successMatcher.find()){
+                String temp = successMatcher.group();
+                Expression tempExpression = parser.parseExpression(temp);
+                String result = (String) tempExpression.getValue(context);
+                successMsg.replaceAll("\\{\\{"+temp+"}}",result);
+            }
+
+            Matcher errorMatcher = PATTERN.matcher(successMsg);
+            while(errorMatcher.find()){
+                String temp = errorMatcher.group();
+                Expression tempExpression = parser.parseExpression(temp);
+                String result = (String) tempExpression.getValue(context);
+                errorMsg.replaceAll("\\{\\{"+temp+"}}",result);
+            }
+            logRecord.setSuccessMsg(successMsg);
+            logRecord.setErrorMsg(errorMsg);
         }
         // 插入记录
         logRecord.setCreateTime(LocalDateTime.now());
@@ -113,6 +139,28 @@ public class LogRecordAspect {
         Method method = methodSignature.getMethod();
         Method targetMethod = pjp.getTarget().getClass().getMethod(method.getName(), method.getParameterTypes());
         return targetMethod;
+    }
+
+    /**
+     * 根据表达式获取ID
+     * @param expressionStr
+     * @param context
+     * @return
+     */
+    private Object getId(String expressionStr,EvaluationContext context){
+        Expression idExpression = parser.parseExpression(expressionStr);
+        return idExpression.getValue(context);
+    }
+
+    /**
+     * 获取操作者
+     * @param expressionStr
+     * @param context
+     * @return
+     */
+    private String getOperator(String expressionStr,EvaluationContext context){
+        Expression idExpression = parser.parseExpression(expressionStr);
+        return (String) idExpression.getValue(context);
     }
 
     /**
