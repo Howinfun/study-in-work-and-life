@@ -2,6 +2,7 @@ package com.winfun.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.winfun.contants.LogRecordContants;
 import com.winfun.entity.LogRecord;
 import com.winfun.entity.enums.LogRecordEnum;
 import com.winfun.service.LogRecordService;
@@ -53,8 +54,6 @@ public class LogRecordAspect {
 
         Method method = this.getMethod(point);
         Object[] args = point.getArgs();
-        Class mapperClass = logRecordAnno.mapperName();
-        BaseMapper mapper = (BaseMapper) applicationContext.getBean(mapperClass);
         LogRecordEnum logRecordEnum = logRecordAnno.logType();
         // 日志记录
         LogRecord logRecord = new LogRecord();
@@ -63,7 +62,10 @@ public class LogRecordAspect {
         String operator = this.getOperator(logRecordAnno.operator(),context);
         logRecord.setOperator(operator);
         Object proceedResult = null;
+        // 记录实体记录
         if ("record".equals(this.type)){
+            Class mapperClass = logRecordAnno.mapperName();
+            BaseMapper mapper = (BaseMapper) applicationContext.getBean(mapperClass);
             String id;
             Object beforeRecord;
             Object afterRecord;
@@ -99,27 +101,31 @@ public class LogRecordAspect {
                 default:
                     break;
             }
-        }else {
-            String successMsg = logRecordAnno.successMsg();
-            String errorMsg = logRecordAnno.errorMsg();
-            // 对成功信息和失败信息做表达式提取
-            Matcher successMatcher = PATTERN.matcher(successMsg);
-            while(successMatcher.find()){
-                String temp = successMatcher.group();
-                Expression tempExpression = parser.parseExpression(temp);
-                String result = (String) tempExpression.getValue(context);
-                successMsg.replaceAll("\\{\\{"+temp+"}}",result);
+        // 记录信息
+        }else if ("message".equals(this.type)){
+            try {
+                proceedResult = point.proceed();
+                String successMsg = logRecordAnno.successMsg();
+                // 对成功信息做表达式提取
+                Matcher successMatcher = PATTERN.matcher(successMsg);
+                while(successMatcher.find()){
+                    String temp = successMatcher.group();
+                    Expression tempExpression = parser.parseExpression(temp);
+                    String result = (String) tempExpression.getValue(context);
+                    temp = "{{"+temp+"}}";
+                    successMsg = successMsg.replace(temp,result);
+                }
+                logRecord.setSuccessMsg(successMsg);
+            }catch (Exception e){
+                String errorMsg = logRecordAnno.errorMsg();
+                String exceptionMsg = e.getMessage();
+                errorMsg = errorMsg.replace(LogRecordContants.ERROR_MSG_PATTERN,exceptionMsg);
+                logRecord.setSuccessMsg(errorMsg);
+                // 插入记录
+                logRecord.setCreateTime(LocalDateTime.now());
+                this.logRecordService.insertLogRecord(logRecord);
+                throw new Exception(errorMsg);
             }
-
-            Matcher errorMatcher = PATTERN.matcher(successMsg);
-            while(errorMatcher.find()){
-                String temp = errorMatcher.group();
-                Expression tempExpression = parser.parseExpression(temp);
-                String result = (String) tempExpression.getValue(context);
-                errorMsg.replaceAll("\\{\\{"+temp+"}}",result);
-            }
-            logRecord.setSuccessMsg(successMsg);
-            logRecord.setErrorMsg(errorMsg);
         }
         // 插入记录
         logRecord.setCreateTime(LocalDateTime.now());
@@ -180,5 +186,11 @@ public class LogRecordAspect {
             context.setVariable(params[len], args[len]);
         }
         return context;
+    }
+
+    public static void main(String[] args) {
+        String str = "成功新增用户{{#user.name}}";
+        str = str.replace("{{#user.name}}","luff");
+        System.out.println(str);
     }
 }

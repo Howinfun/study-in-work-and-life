@@ -8,5 +8,5 @@ package com.winfun.contants;
  **/
 public interface LogRecordContants {
 
-
+    String ERROR_MSG_PATTERN = "{{#_errorMsg}}";
 }

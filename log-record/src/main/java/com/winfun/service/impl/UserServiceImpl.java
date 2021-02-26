@@ -6,6 +6,7 @@ import com.winfun.entity.enums.LogRecordEnum;
 import com.winfun.mapper.UserMapper;
 import com.winfun.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -28,9 +29,14 @@ public class UserServiceImpl implements UserService {
     @LogRecordAnno(logType = LogRecordEnum.INSERT,
             mapperName = UserMapper.class,
             id = "#user.id",
-            operator = "#operator")
+            operator = "#operator",
+            successMsg = "成功新增用户{{#user.name}}",
+            errorMsg = "新增用户失败，错误信息：{{#_errorMsg}}")
     @Override
     public String insert(User user,String operator) {
+        if (StringUtils.isEmpty(user.getName())){
+            throw new RuntimeException("用户名不能为空");
+        }
         this.userMapper.insert(user);
         return user.getId();
     }
@@ -43,7 +49,9 @@ public class UserServiceImpl implements UserService {
     @LogRecordAnno(logType = LogRecordEnum.UPDATE,
             mapperName = UserMapper.class,
             id = "#user.id",
-            operator = "#operator")
+            operator = "#operator",
+            successMsg = "成功更新用户：更新后用户名称「{{#user.name}}」",
+            errorMsg = "更新用户失败，错误信息：{{#_errorMsg}}")
     @Override
     public Boolean update(User user,String operator) {
         return this.userMapper.updateById(user) > 0;
