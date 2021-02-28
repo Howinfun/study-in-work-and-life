@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -65,6 +66,9 @@ public class LogRecordAspect {
         // 记录实体记录
         if ("record".equals(this.type)){
             Class mapperClass = logRecordAnno.mapperName();
+            if (mapperClass != BaseMapper.class){
+                throw new RuntimeException("mapperClass 属性传入 Class 不是 BaseMapper 的子类");
+            }
             BaseMapper mapper = (BaseMapper) applicationContext.getBean(mapperClass);
             String id;
             Object beforeRecord;
@@ -124,6 +128,7 @@ public class LogRecordAspect {
                 // 插入记录
                 logRecord.setCreateTime(LocalDateTime.now());
                 this.logRecordSDKService.insertLogRecord(logRecord);
+                // 回抛异常
                 throw new Exception(errorMsg);
             }
         }

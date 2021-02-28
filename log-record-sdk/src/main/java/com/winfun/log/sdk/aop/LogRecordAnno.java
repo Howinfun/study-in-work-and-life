@@ -1,5 +1,7 @@
 package com.winfun.log.sdk.aop;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.winfun.log.sdk.contants.LogRecordContants;
 import com.winfun.log.sdk.entity.enums.LogRecordEnum;
 
 import java.lang.annotation.Documented;
@@ -24,7 +26,7 @@ public @interface LogRecordAnno {
      * 日志类型一：记录记录实体
      * Mapper Class，需要配合 MybatisPlus 使用
      */
-    Class mapperName();
+    Class mapperName() default Object.class;
 
     /**
      * 日志类型一：记录记录实体

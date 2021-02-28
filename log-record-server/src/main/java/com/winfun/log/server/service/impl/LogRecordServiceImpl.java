@@ -4,6 +4,7 @@ import com.winfun.log.sdk.entity.LogRecord;
 import com.winfun.log.server.mapper.LogRecordMapper;
 import com.winfun.log.server.service.LogRecordService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
 public class LogRecordServiceImpl implements LogRecordService {
 
     @Resource
+    @Qualifier("LogRecordRestTemplate")
     private LogRecordMapper logRecordMapper;
 
     /***

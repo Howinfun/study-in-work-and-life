@@ -9,4 +9,6 @@ package com.winfun.log.sdk.contants;
 public interface LogRecordContants {
 
     String ERROR_MSG_PATTERN = "{{#_errorMsg}}";
+
+    Class EMPTY = null;
 }

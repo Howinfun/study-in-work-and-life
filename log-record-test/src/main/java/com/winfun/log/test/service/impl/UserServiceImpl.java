@@ -27,11 +27,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @LogRecordAnno(logType = LogRecordEnum.INSERT,
-            mapperName = UserMapper.class,
-            id = "#user.id",
-            operator = "#operator",
-            successMsg = "成功新增用户{{#user.name}}",
-            errorMsg = "新增用户失败，错误信息：{{#_errorMsg}}")
+            successMsg = "成功新增用户「{{#user.name}}」",
+            errorMsg = "新增用户失败，错误信息：「{{#_errorMsg}}」")
     @Override
     public String insert(User user,String operator) {
         if (StringUtils.isEmpty(user.getName())){
@@ -49,9 +46,7 @@ public class UserServiceImpl implements UserService {
     @LogRecordAnno(logType = LogRecordEnum.UPDATE,
             mapperName = UserMapper.class,
             id = "#user.id",
-            operator = "#operator",
-            successMsg = "成功更新用户：更新后用户名称「{{#user.name}}」",
-            errorMsg = "更新用户失败，错误信息：{{#_errorMsg}}")
+            operator = "#operator")
     @Override
     public Boolean update(User user,String operator) {
         return this.userMapper.updateById(user) > 0;
@@ -63,9 +58,9 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @LogRecordAnno(logType = LogRecordEnum.DELETE,
-            mapperName = UserMapper.class,
-            id = "#id",
-            operator = "#operator")
+            operator = "#operator",
+            successMsg = "成功删除用户,用户ID「{{#id}}」",
+            errorMsg = "删除用户失败，错误信息：「{{#_errorMsg}}」")
     @Override
     public Boolean delete(Serializable id,String operator) {
         return this.userMapper.deleteById(id) > 0;
