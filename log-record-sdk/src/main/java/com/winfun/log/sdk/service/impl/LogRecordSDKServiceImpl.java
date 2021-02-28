@@ -34,6 +34,6 @@ public class LogRecordSDKServiceImpl implements LogRecordSDKService {
     @Override
     public ApiResult<Integer> insertLogRecord(LogRecord logRecord) {
         // 发起HTTP请求
-        return this.restTemplate.postForObject(url,logRecord,ApiResult.class);
+        return this.restTemplate.postForObject(url+"/log/insert",logRecord,ApiResult.class);
     }
 }

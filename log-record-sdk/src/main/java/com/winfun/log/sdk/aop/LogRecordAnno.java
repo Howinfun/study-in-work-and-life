@@ -26,7 +26,7 @@ public @interface LogRecordAnno {
      * 日志类型一：记录记录实体
      * Mapper Class，需要配合 MybatisPlus 使用
      */
-    Class mapperName() default Object.class;
+    Class mapperName() default BaseMapper.class;
 
     /**
      * 日志类型一：记录记录实体
@@ -35,7 +35,7 @@ public @interface LogRecordAnno {
     String id() default "";
 
     /**
-     * 日志类型
+     * 日志操作类型
      */
     LogRecordEnum logType() default LogRecordEnum.INSERT;
 
