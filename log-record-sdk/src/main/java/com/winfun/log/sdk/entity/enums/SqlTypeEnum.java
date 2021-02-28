@@ -17,7 +17,7 @@ import java.util.Map;
  **/
 @Getter
 @AllArgsConstructor
-public enum LogRecordEnum {
+public enum SqlTypeEnum {
 
     INSERT("1","新增"),
     UPDATE("2","更新"),
@@ -28,15 +28,15 @@ public enum LogRecordEnum {
     @JsonValue
     private String value;
 
-    private static Map<String, LogRecordEnum> logRecordEnumHashMap = new HashMap<>();
+    private static Map<String, SqlTypeEnum> sqlTypeEnumHashMap = new HashMap<>();
 
     static {
-        for (LogRecordEnum logRecordEnum : LogRecordEnum.values()) {
-            logRecordEnumHashMap.put(logRecordEnum.getKey(), logRecordEnum);
+        for (SqlTypeEnum sqlTypeEnum : SqlTypeEnum.values()) {
+            sqlTypeEnumHashMap.put(sqlTypeEnum.getKey(), sqlTypeEnum);
         }
     }
     @JsonCreator
-    public static LogRecordEnum getGenderEnumByKey(String key) {
-        return logRecordEnumHashMap.get(key);
+    public static SqlTypeEnum getGenderEnumByKey(String key) {
+        return sqlTypeEnumHashMap.get(key);
     }
 }

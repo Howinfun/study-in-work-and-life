@@ -3,7 +3,8 @@ package com.winfun.log.sdk.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.winfun.log.sdk.entity.enums.LogRecordEnum;
+import com.winfun.log.sdk.entity.enums.LogTypeEnum;
+import com.winfun.log.sdk.entity.enums.SqlTypeEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -28,9 +29,17 @@ public class LogRecord implements Serializable {
     @TableId(value = "id",type = IdType.AUTO)
     private String id;
     /**
-     * 日志类型：1增2改3删
+     * 业务名称
      */
-    private LogRecordEnum logType;
+    private String businessName;
+    /**
+     * 操作日志类型：message ｜ record
+     */
+    private LogTypeEnum logType;
+    /**
+     * SQL类型：1增2改3删
+     */
+    private SqlTypeEnum sqlType;
     /**
      * 方法执行前数据库记录内容
      */
@@ -55,13 +64,4 @@ public class LogRecord implements Serializable {
      * 失败消息
      */
     private String errorMsg;
-
-    public static void main(String[] args) {
-        String str = "hahah{{#user.id}},xixixi{{#operator}}";
-        Pattern pattern = Pattern.compile("(?<=\\{\\{)(.+?)(?=}})");
-        Matcher matcher = pattern.matcher(str);
-        while(matcher.find()){
-            System.out.println(matcher.group());
-        }
-    }
 }

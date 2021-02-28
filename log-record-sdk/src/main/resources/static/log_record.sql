@@ -3,7 +3,9 @@ create table log_record
 (
     id            bigint unsigned auto_increment comment '主键'
         primary key,
-    log_type      varchar(2)    default '1' not null comment '日志类型：1增2改3删',
+    business_name varchar(100) default '' not null comment '业务方',
+    log_type      varchar(2)    default '1' not null comment '操作日志类型：1增2改3删',
+    sql_type      varchar(2)    default '1' not null comment 'SQL类型：1增2改3删',
     before_record varchar(1000) default ''  null comment '方法执行前数据库记录内容',
     after_record  varchar(1000) default ''  null comment '方法执行后数据库记录内容',
     operator      varchar(100)  default ''  null comment '操作者',

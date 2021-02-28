@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.winfun.log.sdk.contants.LogRecordContants;
 import com.winfun.log.sdk.entity.LogRecord;
-import com.winfun.log.sdk.entity.enums.LogRecordEnum;
+import com.winfun.log.sdk.entity.enums.LogTypeEnum;
+import com.winfun.log.sdk.entity.enums.SqlTypeEnum;
 import com.winfun.log.sdk.service.LogRecordSDKService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,8 +13,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
@@ -39,9 +38,6 @@ public class LogRecordAspect {
 
     private static final Pattern PATTERN = Pattern.compile("(?<=\\{\\{)(.+?)(?=}})");
 
-    @Value("${log.record.type}")
-    private String type;
-
     private ExpressionParser parser = new SpelExpressionParser();
     private LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
 
@@ -55,16 +51,22 @@ public class LogRecordAspect {
 
         Method method = this.getMethod(point);
         Object[] args = point.getArgs();
-        LogRecordEnum logRecordEnum = logRecordAnno.logType();
         // 日志记录
         LogRecord logRecord = new LogRecord();
+        // 日志类型
+        LogTypeEnum logType = logRecordAnno.logType();
+        // 业务名称
+        String businessName = logRecordAnno.businessName();
         EvaluationContext context = this.bindParam(method, args);
         // 获取操作者
         String operator = this.getOperator(logRecordAnno.operator(),context);
+        logRecord.setLogType(logType);
+        logRecord.setBusinessName(businessName);
         logRecord.setOperator(operator);
         Object proceedResult = null;
         // 记录实体记录
-        if ("record".equals(this.type)){
+        if (LogTypeEnum.RECORD.equals(logType)){
+            SqlTypeEnum sqlType = logRecordAnno.sqlType();
             Class mapperClass = logRecordAnno.mapperName();
             if (mapperClass != BaseMapper.class){
                 throw new RuntimeException("mapperClass 属性传入 Class 不是 BaseMapper 的子类");
@@ -73,9 +75,9 @@ public class LogRecordAspect {
             String id;
             Object beforeRecord;
             Object afterRecord;
-            switch (logRecordEnum){
+            switch (sqlType){
                 case INSERT:
-                    logRecord.setLogType(LogRecordEnum.INSERT);
+                    logRecord.setSqlType(SqlTypeEnum.INSERT);
                     proceedResult = point.proceed();
                     //根据spel表达式获取id
                     id = (String) this.getId(logRecordAnno.id(), context);
@@ -84,7 +86,7 @@ public class LogRecordAspect {
                     logRecord.setAfterRecord(JSON.toJSONString(result));
                     break;
                 case UPDATE:
-                    logRecord.setLogType(LogRecordEnum.UPDATE);
+                    logRecord.setSqlType(SqlTypeEnum.UPDATE);
                     //根据spel表达式获取id
                     id = (String) this.getId(logRecordAnno.id(), context);
                     beforeRecord = mapper.selectById(id);
@@ -94,7 +96,7 @@ public class LogRecordAspect {
                     logRecord.setAfterRecord(JSON.toJSONString(afterRecord));
                     break;
                 case DELETE:
-                    logRecord.setLogType(LogRecordEnum.DELETE);
+                    logRecord.setSqlType(SqlTypeEnum.DELETE);
                     //根据spel表达式获取id
                     id = (String) this.getId(logRecordAnno.id(), context);
                     beforeRecord = mapper.selectById(id);
@@ -106,7 +108,7 @@ public class LogRecordAspect {
                     break;
             }
         // 记录信息
-        }else if ("message".equals(this.type)){
+        }else if (LogTypeEnum.MESSAGE.equals(logType)){
             try {
                 proceedResult = point.proceed();
                 String successMsg = logRecordAnno.successMsg();

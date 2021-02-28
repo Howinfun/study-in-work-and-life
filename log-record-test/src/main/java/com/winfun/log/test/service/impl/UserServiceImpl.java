@@ -1,7 +1,8 @@
 package com.winfun.log.test.service.impl;
 
 import com.winfun.log.sdk.aop.LogRecordAnno;
-import com.winfun.log.sdk.entity.enums.LogRecordEnum;
+import com.winfun.log.sdk.entity.enums.LogTypeEnum;
+import com.winfun.log.sdk.entity.enums.SqlTypeEnum;
 import com.winfun.log.test.service.UserService;
 import com.winfun.log.test.entity.User;
 import com.winfun.log.test.mapper.UserMapper;
@@ -26,7 +27,8 @@ public class UserServiceImpl implements UserService {
      * @param user
      * @return
      */
-    @LogRecordAnno(logType = LogRecordEnum.INSERT,
+    @LogRecordAnno(logType = LogTypeEnum.MESSAGE,
+            businessName = "userBusiness",
             successMsg = "成功新增用户「{{#user.name}}」",
             errorMsg = "新增用户失败，错误信息：「{{#_errorMsg}}」")
     @Override
@@ -43,9 +45,11 @@ public class UserServiceImpl implements UserService {
      * @param user
      * @return
      */
-    @LogRecordAnno(logType = LogRecordEnum.UPDATE,
+    @LogRecordAnno(logType = LogTypeEnum.RECORD,
+            businessName = "userBusiness",
             mapperName = UserMapper.class,
             id = "#user.id",
+            sqlType = SqlTypeEnum.UPDATE,
             operator = "#operator")
     @Override
     public Boolean update(User user,String operator) {
@@ -57,7 +61,8 @@ public class UserServiceImpl implements UserService {
      * @param id
      * @return
      */
-    @LogRecordAnno(logType = LogRecordEnum.DELETE,
+    @LogRecordAnno(logType = LogTypeEnum.MESSAGE,
+            businessName = "userBusiness",
             operator = "#operator",
             successMsg = "成功删除用户,用户ID「{{#id}}」",
             errorMsg = "删除用户失败，错误信息：「{{#_errorMsg}}」")

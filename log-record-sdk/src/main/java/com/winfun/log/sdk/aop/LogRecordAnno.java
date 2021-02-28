@@ -1,8 +1,8 @@
 package com.winfun.log.sdk.aop;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.winfun.log.sdk.contants.LogRecordContants;
-import com.winfun.log.sdk.entity.enums.LogRecordEnum;
+import com.winfun.log.sdk.entity.enums.LogTypeEnum;
+import com.winfun.log.sdk.entity.enums.SqlTypeEnum;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -23,6 +23,17 @@ import java.lang.annotation.Target;
 public @interface LogRecordAnno {
 
     /**
+     * 操作日志类型
+     * @return
+     */
+    LogTypeEnum logType() default LogTypeEnum.MESSAGE;
+
+    /**
+     * 业务名称
+     * @return
+     */
+    String businessName() default "";
+    /**
      * 日志类型一：记录记录实体
      * Mapper Class，需要配合 MybatisPlus 使用
      */
@@ -35,9 +46,9 @@ public @interface LogRecordAnno {
     String id() default "";
 
     /**
-     * 日志操作类型
+     * sql类型：增删改
      */
-    LogRecordEnum logType() default LogRecordEnum.INSERT;
+    SqlTypeEnum sqlType() default SqlTypeEnum.INSERT;
 
     /**
      * 操作者
