@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * LogRecord Service Impl
@@ -32,5 +33,16 @@ public class LogRecordServiceImpl implements LogRecordService {
     public Integer insertLogRecord(LogRecord logRecord) {
         log.info("增加日志：{}",logRecord);
         return this.logRecordMapper.insert(logRecord);
+    }
+
+    /**
+     * 根据业务名称查询操作日志列表
+     * @param businessName
+     * @return
+     */
+    @Override
+    public List<LogRecord> queryLogRecord(String businessName) {
+        List<LogRecord> logRecordList = this.logRecordMapper.queryByBusinessName(businessName);
+        return logRecordList;
     }
 }

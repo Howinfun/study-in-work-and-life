@@ -2,6 +2,8 @@ package com.winfun.log.server.service;
 
 import com.winfun.log.sdk.entity.LogRecord;
 
+import java.util.List;
+
 /**
  *
  * LogRecord Service
@@ -17,4 +19,11 @@ public interface LogRecordService {
      * @return {@link Integer }
      **/
     Integer insertLogRecord(LogRecord logRecord);
+
+    /**
+     * 根据业务名称查询操作日志列表
+     * @param businessName
+     * @return
+     */
+    List<LogRecord> queryLogRecord(String businessName);
 }

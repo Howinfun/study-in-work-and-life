@@ -12,9 +12,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Student Controller
+ * LogRecord 注解
  * @author winfun
- * @date 2020/11/3 4:32 下午
+ * @date 2021/2/25 4:32 下午
  **/
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

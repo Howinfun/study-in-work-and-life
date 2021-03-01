@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 /**
  * LogRecord Aspect
  * @author winfun
- * @date 2020/11/3 4:52 下午
+ * @date 2021/2/25 4:52 下午
  **/
 @Slf4j
 @Aspect
@@ -68,7 +68,7 @@ public class LogRecordAspect {
         if (LogTypeEnum.RECORD.equals(logType)){
             SqlTypeEnum sqlType = logRecordAnno.sqlType();
             Class mapperClass = logRecordAnno.mapperName();
-            if (mapperClass != BaseMapper.class){
+            if (mapperClass.isAssignableFrom(BaseMapper.class)){
                 throw new RuntimeException("mapperClass 属性传入 Class 不是 BaseMapper 的子类");
             }
             BaseMapper mapper = (BaseMapper) applicationContext.getBean(mapperClass);
@@ -76,6 +76,7 @@ public class LogRecordAspect {
             Object beforeRecord;
             Object afterRecord;
             switch (sqlType){
+                // 新增
                 case INSERT:
                     logRecord.setSqlType(SqlTypeEnum.INSERT);
                     proceedResult = point.proceed();
@@ -85,6 +86,7 @@ public class LogRecordAspect {
                     logRecord.setBeforeRecord("");
                     logRecord.setAfterRecord(JSON.toJSONString(result));
                     break;
+                // 更新
                 case UPDATE:
                     logRecord.setSqlType(SqlTypeEnum.UPDATE);
                     //根据spel表达式获取id
@@ -95,6 +97,7 @@ public class LogRecordAspect {
                     logRecord.setBeforeRecord(JSON.toJSONString(beforeRecord));
                     logRecord.setAfterRecord(JSON.toJSONString(afterRecord));
                     break;
+                // 删除
                 case DELETE:
                     logRecord.setSqlType(SqlTypeEnum.DELETE);
                     //根据spel表达式获取id
@@ -172,8 +175,17 @@ public class LogRecordAspect {
      * @return
      */
     private String getOperator(String expressionStr,EvaluationContext context){
-        Expression idExpression = parser.parseExpression(expressionStr);
-        return (String) idExpression.getValue(context);
+        try {
+            if (expressionStr.startsWith("#")){
+                Expression idExpression = parser.parseExpression(expressionStr);
+                return (String) idExpression.getValue(context);
+            }else {
+                return expressionStr;
+            }
+        }catch (Exception e){
+            log.error("Log-Record-SDK 获取操作者失败！，错误信息：{}",e.getMessage());
+            return "default";
+        }
     }
 
     /**
