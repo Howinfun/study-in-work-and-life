@@ -1,16 +1,21 @@
 package com.winfun.log.test.controller;
 
+import com.winfun.log.sdk.entity.LogRecord;
+import com.winfun.log.sdk.service.LogRecordSDKService;
 import com.winfun.log.test.entity.User;
 import com.winfun.log.sdk.pojo.ApiResult;
 import com.winfun.log.test.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Student Controller
@@ -23,6 +28,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private LogRecordSDKService logRecordSDKService;
 
 
     @PutMapping("/insert")
@@ -44,5 +51,10 @@ public class UserController {
         String operator = "system";
         Boolean success = this.userService.delete(id,operator);
         return ApiResult.success(success);
+    }
+
+    @GetMapping("/query/{businessName}")
+    public ApiResult<List<LogRecord>> query(@PathVariable("businessName") String businessName){
+        return this.logRecordSDKService.queryLogRecord(businessName);
     }
 }

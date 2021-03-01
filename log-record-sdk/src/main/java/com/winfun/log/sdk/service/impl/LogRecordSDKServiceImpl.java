@@ -10,6 +10,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 /**
  * LogRecord Service Impl
  * @author winfun
@@ -35,5 +37,17 @@ public class LogRecordSDKServiceImpl implements LogRecordSDKService {
     public ApiResult<Integer> insertLogRecord(LogRecord logRecord) {
         // 发起HTTP请求
         return this.restTemplate.postForObject(url+"/log/insert",logRecord,ApiResult.class);
+    }
+
+    /**
+     * 查询操作日志记录列表
+     * @param businessName
+     * @return
+     */
+    @Override
+    public ApiResult<List<LogRecord>> queryLogRecord(String businessName) {
+        ApiResult<List<LogRecord>> result = this.restTemplate.getForObject(url+"/log/query/"+businessName,
+                                                                              ApiResult.class);
+        return result;
     }
 }

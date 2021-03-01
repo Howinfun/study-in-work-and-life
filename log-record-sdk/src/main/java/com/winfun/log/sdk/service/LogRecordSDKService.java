@@ -3,6 +3,8 @@ package com.winfun.log.sdk.service;
 import com.winfun.log.sdk.entity.LogRecord;
 import com.winfun.log.sdk.pojo.ApiResult;
 
+import java.util.List;
+
 /**
  *
  * LogRecord Service
@@ -18,4 +20,11 @@ public interface LogRecordSDKService {
      * @return {@link ApiResult<Integer> }
      **/
     ApiResult<Integer> insertLogRecord(LogRecord logRecord);
+
+    /**
+     * 查询操作日志记录列表
+     * @param businessName
+     * @return
+     */
+    ApiResult<List<LogRecord>> queryLogRecord(String businessName);
 }
