@@ -24,7 +24,7 @@ public class DubboServiceOneImpl implements DubboServiceOne {
         // dubbo 接口默认超时时间为1s，我们这里直接休眠5s
         //Thread.sleep(5000);
         // 服务直接抛出异常
-        throw new Exception("Exception 来搞事了");
-        //return ApiResult.success("hello "+name);
+        //throw new Exception("Exception 来搞事了");
+        return ApiResult.success("hello "+name);
     }
 }

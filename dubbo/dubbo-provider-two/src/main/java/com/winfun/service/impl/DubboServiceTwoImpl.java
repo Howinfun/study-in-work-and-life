@@ -23,7 +23,7 @@ public class DubboServiceTwoImpl implements DubboServiceTwo {
     @Override
     public ApiResult<String> sayHi(String name) {
         // dubbo 接口默认超时时间为1s，我们这里直接休眠5s
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
         return ApiResult.success("hi "+name);
     }
 }

@@ -76,12 +76,16 @@ public class SentinelAnnotationHelloController {
     @GetMapping("/hello/{name}")
     @SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
-        return this.dubboServiceOne.sayHello(name);
+
+        return ApiResult.success("hello"+name);
+        //return this.dubboServiceOne.sayHello(name);
     }
 
     @GetMapping("/hi/{name}")
     public ApiResult sayHi(@PathVariable("name") final String name){
-        return this.dubboServiceTwo.sayHi(name);
+
+        return ApiResult.success("hi"+name);
+        //return this.dubboServiceTwo.sayHi(name);
     }
 
     /**
