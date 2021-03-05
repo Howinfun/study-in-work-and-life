@@ -4,12 +4,7 @@ import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.winfun.entity.pojo.ApiResult;
 import com.winfun.service.DubboServiceOne;
 import com.winfun.service.DubboServiceTwo;
@@ -19,9 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Say Hello
@@ -42,7 +34,7 @@ public class SentinelCoreHelloController {
     /**
      * 初始化流控规则和熔断规则
      * ps:因为我们没有接入 Sentinel Dashboard，所以得自己在代码里面设置好
-     */
+
     static{
         // 初始化流控规则
         final List<FlowRule> flowRules = new ArrayList<>();
@@ -70,6 +62,7 @@ public class SentinelCoreHelloController {
         FlowRuleManager.loadRules(flowRules);
         DegradeRuleManager.loadRules(degradeRules);
     }
+     */
 
     @GetMapping("/hello/{name}")
     public ApiResult sayHello(@PathVariable("name") final String name){

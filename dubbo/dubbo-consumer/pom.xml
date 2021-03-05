@@ -46,6 +46,11 @@
             <artifactId>sentinel-annotation-aspectj</artifactId>
             <version>1.8.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.howinfun</groupId>
+            <artifactId>sentinel-rules-sdk</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
         <!-- sentinel dashboard -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
