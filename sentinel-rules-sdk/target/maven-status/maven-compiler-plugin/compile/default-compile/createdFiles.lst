@@ -1,5 +1,4 @@
 com/github/howinfun/sentinel/pojo/SentinelFlowRule.class
-com/github/howinfun/sentinel/mapping/SentinelRulesMapping.class
 com/github/howinfun/sentinel/properties/SentinelRulesProperties.class
 com/github/howinfun/sentinel/config/SentinelRulesGenerateConfig.class
 com/github/howinfun/sentinel/pojo/SentinelDegradeRule.class

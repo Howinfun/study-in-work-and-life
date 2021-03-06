@@ -24,67 +24,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Say Hello
+ * 测试自研 Sentinel Rules SDK
  * @author winfun
  * @date 2020/10/29 5:12 下午
  **/
 @Slf4j
 @RestController
-@RequestMapping("/sentinel/annotation")
-public class SentinelAnnotationHelloController {
+@RequestMapping("/sentinel/rules/sdk")
+public class SentinelRulesSDKHelloController {
 
-    public static final String RESOURCE_NAME = "dubboServiceOne";
-    @DubboReference(check = false,lazy = true,retries = 0,mock = "true")
-    private DubboServiceOne dubboServiceOne;
-    @DubboReference(check = false,lazy = true,retries = 0)
-    private DubboServiceTwo dubboServiceTwo;
-    @Resource
-    private HelloService helloService;
-
-    /**
-     * 初始化流控规则和熔断规则
-     * ps:因为我们没有接入 Sentinel Dashboard，所以得自己在代码里面设置好
-     * */
-    static{
-        // 初始化流控规则
-        final List<FlowRule> flowRules = new ArrayList<>();
-        final List<DegradeRule> degradeRules = new ArrayList<>();
-        // 限流规则
-        final FlowRule flowRule = new FlowRule();
-        flowRule.setResource(RESOURCE_NAME);
-        flowRule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        // 1 QPS
-        flowRule.setCount(1);
-        flowRules.add(flowRule);
-        // 熔断规则
-        final DegradeRule degradeRule = new DegradeRule();
-        degradeRule.setResource(RESOURCE_NAME);
-        degradeRule.setGrade(RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT);
-        // 2个异常数
-        degradeRule.setCount(1);
-        // 时间窗口长度，单位为秒
-        degradeRule.setTimeWindow(5);
-        // 最小请求数
-        degradeRule.setMinRequestAmount(5);
-        // 熔断时长：当5秒内，10个请求里面出现2个异常，则进行熔断，熔断时长为10s
-        degradeRule.setStatIntervalMs(10000);
-        degradeRules.add(degradeRule);
-        FlowRuleManager.loadRules(flowRules);
-        DegradeRuleManager.loadRules(degradeRules);
-    }
-
+    public static final String RESOURCE_NAME = "sayHello";
+    public static final String RESOURCE_NAME2 = "sayHi";
 
     @GetMapping("/hello/{name}")
     @SentinelResource(value=RESOURCE_NAME,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHello(@PathVariable("name") final String name){
 
-        return this.dubboServiceOne.sayHello(name);
+        return ApiResult.success("hello "+name);
     }
 
     @GetMapping("/hi/{name}")
+    @SentinelResource(value=RESOURCE_NAME2,fallback = "sayHelloFallback",blockHandler = "sayHelloBlock")
     public ApiResult sayHi(@PathVariable("name") final String name){
 
-        return this.dubboServiceTwo.sayHi(name);
+        return ApiResult.success("hi "+name);
     }
 
     /**
@@ -106,14 +69,13 @@ public class SentinelAnnotationHelloController {
      * @return {@link ApiResult<String> }
      */
     public ApiResult<String> sayHelloBlock(final String name, final BlockException e){
-        ApiResult<String> result;
+
         if (e instanceof DegradeException){
             log.error("资源：{} 被熔断了,message is {}",RESOURCE_NAME,e.getMessage());
-            result = ApiResult.fail("hello fallback");
+            return ApiResult.fail("hello fallback");
         }else {
             log.error("资源：{} 被流控了",RESOURCE_NAME);
-            result = ApiResult.fail("hello block");
+            return ApiResult.fail("hello block");
         }
-        return result;
     }
 }

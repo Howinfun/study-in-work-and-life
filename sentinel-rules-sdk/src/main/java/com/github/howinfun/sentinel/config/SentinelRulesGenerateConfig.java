@@ -4,10 +4,10 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
-import com.github.howinfun.sentinel.mapping.SentinelRulesMapping;
 import com.github.howinfun.sentinel.pojo.SentinelDegradeRule;
 import com.github.howinfun.sentinel.pojo.SentinelFlowRule;
 import com.github.howinfun.sentinel.properties.SentinelRulesProperties;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -38,17 +38,19 @@ public class SentinelRulesGenerateConfig implements ApplicationListener<ContextR
                 this.applicationContext.getBean(SentinelRulesProperties.class);
         List<SentinelFlowRule> flowRuleList = sentinelRulesProperties.getFlowRuleList();
         List<SentinelDegradeRule> degradeRuleList = sentinelRulesProperties.getDegradeRuleList();
-        // 初始化流控规则
+
         final List<FlowRule> flowRules = new ArrayList<>();
         final List<DegradeRule> degradeRules = new ArrayList<>();
         // 处理流控规则
         flowRuleList.forEach(sentinelFlowRule -> {
-            FlowRule flowRule = SentinelRulesMapping.INSTANCE.toFlowRule(sentinelFlowRule);
+            FlowRule flowRule = new FlowRule();
+            BeanUtils.copyProperties(sentinelFlowRule,flowRule);
             flowRules.add(flowRule);
         });
         // 处理熔断规则
         degradeRuleList.forEach(sentinelDegradeRule -> {
-            DegradeRule degradeRule = SentinelRulesMapping.INSTANCE.toDegradeRule(sentinelDegradeRule);
+            DegradeRule degradeRule = new DegradeRule();
+            BeanUtils.copyProperties(sentinelDegradeRule,degradeRule);
             degradeRules.add(degradeRule);
         });
         FlowRuleManager.loadRules(flowRules);
