@@ -1,6 +1,6 @@
 package com.github.howinfun.pojo;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;
 
 /**
@@ -9,8 +9,9 @@ import lombok.Data;
  * @date 2021/3/18 4:22 下午
  **/
 @Data
+@XStreamAlias("sitemap")
 public class SiteMap {
 
-    @JacksonXmlProperty(localName = "loc",namespace = "")
+    @XStreamAlias("loc")
     private String loc;
 }
