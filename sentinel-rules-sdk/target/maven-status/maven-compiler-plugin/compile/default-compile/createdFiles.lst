@@ -1,0 +1,6 @@
+com/github/howinfun/sentinel/pojo/PropertyChange.class
+com/github/howinfun/sentinel/pojo/SentinelDegradeRule.class
+com/github/howinfun/sentinel/enums/PropertyChangeType.class
+com/github/howinfun/sentinel/pojo/SentinelFlowRule.class
+com/github/howinfun/sentinel/properties/SentinelRulesProperties.class
+com/github/howinfun/sentinel/config/SentinelRulesGenerateConfig.class

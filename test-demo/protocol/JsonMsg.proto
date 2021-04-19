@@ -1,0 +1,10 @@
+syntax = "proto3";
+package com.hyf.testDemo.netty.protocol;
+
+option java_package = "com.hyf.testDemo.netty.protocol";
+option java_outer_classname = "JsonMsgProto";
+
+message Msg {
+    uint32 id = 1;
+    string content = 2;
+}
