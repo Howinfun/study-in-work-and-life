@@ -1,5 +1,6 @@
 package com.github.howinfun;
 
+import java.applet.AppletContext;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,6 @@ public class Student implements Serializable {
     private String name;
     private String sex;
     private Integer height;
+
+    private Apple apple;
 }
