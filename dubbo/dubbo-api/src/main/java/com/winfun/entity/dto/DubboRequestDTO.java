@@ -17,6 +17,10 @@ public class DubboRequestDTO implements Serializable {
      */
     private String interfaceClass;
     /**
+     * 接口版本号
+     */
+    private String version;
+    /**
      * 方法名称
      */
     private String methodName;

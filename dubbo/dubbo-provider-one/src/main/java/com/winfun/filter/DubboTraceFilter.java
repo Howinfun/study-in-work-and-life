@@ -49,6 +49,7 @@ public class DubboTraceFilter implements Filter {
         DubboRequestDTO requestDTO = new DubboRequestDTO();
         requestDTO.setInterfaceClass(invocation.getInvoker().getInterface().getName());
         requestDTO.setMethodName(invocation.getMethodName());
+        requestDTO.setVersion(invocation.getAttachment("version"));
         requestDTO.setArgs(getArgs(invocation));
         log.info("call Dubbo Api start , request is {}",requestDTO);
     }

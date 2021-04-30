@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Bean;
  * @date 2021/1/22 2:02 下午
  **/
 @EnableDubbo
-@EnableApolloConfig
+//@EnableApolloConfig
 @ServletComponentScan
 @SpringBootApplication
 public class DubboServiceApplication {
@@ -31,7 +31,7 @@ public class DubboServiceApplication {
 	}
 
     /**
-     * 需要引入一下，因为 Sentile 提供的这个切面是没有加 @Component 注解的
+     * 需要引入一下，因为 Sentinel 提供的这个切面是没有加 @Component 注解的
      * @return
      */
     @Bean
