@@ -10,7 +10,7 @@ import org.apache.dubbo.config.annotation.DubboService;
  * @author winfun
  * @date 2020/10/29 5:04 下午
  **/
-@DubboService(interfaceClass = DubboServiceOne.class,version = "1.0")
+//@DubboService(interfaceClass = DubboServiceOne.class,version = "2.0.0")
 public class DubboServiceOneImplV2 implements DubboServiceOne {
     /***
      *  say hello
