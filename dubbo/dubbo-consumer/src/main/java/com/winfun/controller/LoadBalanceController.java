@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2021/3/15 5:57 下午
  **/
 @Slf4j
-@RestController
+//@RestController
 @RequestMapping("/loadbalance")
 public class LoadBalanceController {
 

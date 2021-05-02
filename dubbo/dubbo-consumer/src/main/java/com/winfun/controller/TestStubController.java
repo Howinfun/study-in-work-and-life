@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author winfun
  * @date 2021/2/1 10:26 上午
  **/
-@RestController
+//@RestController
 public class TestStubController {
 
     @DubboReference(lazy = true,check = false,stub = "com.winfun.demo.stub.DubboServiceOneStub")

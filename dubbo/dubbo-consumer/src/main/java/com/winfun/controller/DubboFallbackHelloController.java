@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2021/2/7 11:47 上午
  **/
 @Slf4j
-@RestController
+//@RestController
 @RequestMapping("/dubbo/fallback")
 public class DubboFallbackHelloController {
 

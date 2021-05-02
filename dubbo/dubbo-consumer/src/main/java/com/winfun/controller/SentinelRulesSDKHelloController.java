@@ -29,7 +29,7 @@ import java.util.List;
  * @date 2020/10/29 5:12 下午
  **/
 @Slf4j
-@RestController
+//@RestController
 @RequestMapping("/sentinel/rules/sdk")
 public class SentinelRulesSDKHelloController {
 

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020/10/29 5:12 下午
  **/
 @Slf4j
-@RestController
+//@RestController
 @RequestMapping("/sentinel/core")
 public class SentinelCoreHelloController {
 

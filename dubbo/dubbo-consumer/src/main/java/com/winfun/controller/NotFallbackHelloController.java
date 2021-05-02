@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2021/2/7 11:45 上午
  **/
 @Slf4j
-@RestController
+//@RestController
 @RequestMapping("/not/fallback")
 public class NotFallbackHelloController {
 
