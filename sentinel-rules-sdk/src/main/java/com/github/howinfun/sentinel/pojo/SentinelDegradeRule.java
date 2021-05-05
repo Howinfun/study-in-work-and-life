@@ -5,6 +5,7 @@ import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import lombok.Data;
 
 import java.io.Serializable;
+import lombok.EqualsAndHashCode;
 
 /**
  * Sentinel 熔断规则
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @date 2021/3/4 6:21 下午
  **/
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class SentinelDegradeRule extends AbstractRule implements Serializable {
 
     private static final long serialVersionUID = -5687130403083095146L;

@@ -5,6 +5,7 @@ import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import lombok.Data;
 
 import java.io.Serializable;
+import lombok.EqualsAndHashCode;
 
 /**
  * Sentinel 流控规则 - com.alibaba.csp.sentinel.slots.block.flow.FlowRule
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @date 2021/3/4 6:18 下午
  **/
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class SentinelFlowRule extends AbstractRule implements Serializable {
 
     private static final long serialVersionUID = -6301427067089440279L;
