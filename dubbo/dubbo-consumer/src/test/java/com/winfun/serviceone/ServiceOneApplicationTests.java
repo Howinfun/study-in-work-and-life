@@ -1,6 +1,6 @@
 package com.winfun.serviceone;
 
-import com.winfun.DubboServiceApplication;
+import com.winfun.DubboConsumerApplication;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @Slf4j
 @AutoConfigureMockMvc
-@SpringBootTest(classes = DubboServiceApplication.class)
+@SpringBootTest(classes = DubboConsumerApplication.class)
 @RunWith(SpringRunner.class)
 public class ServiceOneApplicationTests {
 

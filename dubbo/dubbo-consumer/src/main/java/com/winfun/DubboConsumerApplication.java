@@ -1,7 +1,6 @@
 package com.winfun;
 
 import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
-import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,10 +23,10 @@ import org.springframework.context.annotation.Bean;
 //@EnableApolloConfig
 @ServletComponentScan
 @SpringBootApplication
-public class DubboServiceApplication {
+public class DubboConsumerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DubboServiceApplication.class, args);
+		SpringApplication.run(DubboConsumerApplication.class, args);
 	}
 
     /**
