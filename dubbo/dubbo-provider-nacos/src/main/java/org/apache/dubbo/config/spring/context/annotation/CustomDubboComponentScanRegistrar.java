@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import org.apache.dubbo.config.spring.beans.factory.annotation.MyServiceClassPostProcessor;
+import org.apache.dubbo.config.spring.beans.factory.annotation.CustomServiceClassPostProcessor;
 import org.apache.dubbo.config.spring.beans.factory.annotation.ServiceAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -16,29 +16,21 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.ClassUtils;
 
-import static org.apache.dubbo.config.spring.util.DubboBeanUtils.registerCommonBeans;
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.rootBeanDefinition;
 /**
- * Dubbo {@link DubboComponentScanV2} Bean Registrar
- *
- * @see Service
- * @see DubboComponentScanV2
+ * Dubbo {@link DubboComponentScan} Bean Registrar
+ * @author winfun
  * @see ImportBeanDefinitionRegistrar
- * @see ServiceAnnotationBeanPostProcessor
- * @see ReferenceAnnotationBeanPostProcessor
- * @since 2.5.7
  */
-public class DubboComponentScanRegistrarV2 implements ImportBeanDefinitionRegistrar {
+public class CustomDubboComponentScanRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 
+        // 获取 @DubboComponentScan 的扫描路径
         Set<String> packagesToScan = getPackagesToScan(importingClassMetadata);
-
+        // 注册自定义 ServiceAnnotationBeanPostProcessor
         registerServiceAnnotationBeanPostProcessor(packagesToScan, registry);
-
-        // @since 2.7.6 Register the common beans
-        registerCommonBeans(registry);
     }
 
     /**
@@ -50,7 +42,7 @@ public class DubboComponentScanRegistrarV2 implements ImportBeanDefinitionRegist
      */
     private void registerServiceAnnotationBeanPostProcessor(Set<String> packagesToScan, BeanDefinitionRegistry registry) {
 
-        BeanDefinitionBuilder builder = rootBeanDefinition(MyServiceClassPostProcessor.class);
+        BeanDefinitionBuilder builder = rootBeanDefinition(CustomServiceClassPostProcessor.class);
         builder.addConstructorArgValue(packagesToScan);
         builder.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
         AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();

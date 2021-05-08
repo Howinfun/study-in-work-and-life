@@ -22,6 +22,6 @@ public class DubboServiceOneImpl implements DubboServiceOne {
     @Override
     public ApiResult<String> sayHello(String name) {
 
-        return ApiResult.success("hello "+name);
+        return ApiResult.success("hello "+name+",version is 1.0.0");
     }
 }

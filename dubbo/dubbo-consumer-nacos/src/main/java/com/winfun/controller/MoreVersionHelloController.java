@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MoreVersionHelloController {
 
 
-    @DubboReference(version = "*",timeout = -1)
+    @DubboReference(version = "1.0.0",timeout = -1)
     private DubboServiceOne dubboServiceOne;
 
     @GetMapping("/hello/v2/{name}")

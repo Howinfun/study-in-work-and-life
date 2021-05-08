@@ -3,7 +3,7 @@ package com.winfun;
 import com.winfun.service.DubboServiceOne;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.spring.context.annotation.DubboComponentScanRegistrarV2;
+import org.apache.dubbo.config.spring.context.annotation.CustomDubboComponentScanRegistrar;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.CommandLineRunner;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Import;
 @Slf4j
 @EnableDubbo(scanBasePackages = "com.winfun")
 @SpringBootApplication(scanBasePackages = "com.winfun")
-//@Import(DubboComponentScanRegistrarV2.class)
+@Import(CustomDubboComponentScanRegistrar.class)
 public class DubboProviderNacosApplication implements CommandLineRunner, ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
