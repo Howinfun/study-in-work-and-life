@@ -1,0 +1,22 @@
+package com.github.howinfun.datedemo;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+/**
+ *
+ * @author winfun
+ * @date 2021/5/26 10:32 上午
+ **/
+public class TimezoneTest {
+
+    public static void main(String[] args) {
+        /**
+         * 根据timezone查询offset
+         * Asia/Shanghai  -> +08:00
+         */
+        String timezone = "Asia/Shanghai";
+        String offset = ZoneId.of(timezone).getRules().getOffset(LocalDateTime.now()).toString();
+        System.out.println(offset);
+    }
+}
