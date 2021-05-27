@@ -12,7 +12,7 @@ import java.util.TimeZone;
  **/
 public class TimezoneTest {
 
-    private static Integer num = 1 * 60 * 60 * 1000;
+    private static Integer ONE_HOUR_MILLS = 60 * 60 * 1000;
 
     public static void main(String[] args) {
         /**
@@ -29,7 +29,13 @@ public class TimezoneTest {
          */
         TimeZone timeZone = TimeZone.getTimeZone(ZoneId.of(timezone2));
         int rawOffset = timeZone.getRawOffset();
-        System.out.println(rawOffset/num);
+        System.out.println(rawOffset/ONE_HOUR_MILLS);
 
+        /**
+         * 日期转时间戳（指定时区）
+         */
+        LocalDateTime now = LocalDateTime.now();
+        Long mills = now.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        System.out.println(mills);
     }
 }
