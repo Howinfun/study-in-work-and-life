@@ -1,4 +1,4 @@
-package com.github.howinfun.demo.ioc.config;
+package com.github.howinfun.demo.ioc.anno_import;
 
 /**
  * @author winfun

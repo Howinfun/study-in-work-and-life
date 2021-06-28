@@ -1,4 +1,4 @@
-package com.github.howinfun.demo.ioc.config;
+package com.github.howinfun.demo.ioc.anno_import;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
