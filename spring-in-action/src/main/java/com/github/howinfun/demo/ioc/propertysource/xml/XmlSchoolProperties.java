@@ -1,4 +1,4 @@
-package com.github.howinfun.demo.ioc.propertysource;
+package com.github.howinfun.demo.ioc.propertysource.xml;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

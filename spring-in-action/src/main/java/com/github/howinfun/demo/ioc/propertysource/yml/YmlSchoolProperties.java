@@ -1,22 +1,22 @@
-package com.github.howinfun.demo.ioc.propertysource;
+package com.github.howinfun.demo.ioc.propertysource.yml;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * 学校配置类
+ * yml格式的配置类
  * @author winfun
- * @date 2021/7/5 9:56 上午
+ * @date 2021/7/5 10:49 上午
  **/
 @Data
 @Component
-public class SchoolProperties {
+public class YmlSchoolProperties {
 
-    @Value("${school.name}")
+    @Value("${yml.school.name}")
     private String name;
-    @Value("${school.location}")
+    @Value("${yml.school.location}")
     private String location;
-    @Value("${school.level}")
+    @Value("${yml.school.level}")
     private String level;
 }
