@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="xml.school.name">佛山大学</entry>
+    <entry key="xml.school.location">佛山</entry>
+    <entry key="xml.school.level">本科</entry>
+</properties>

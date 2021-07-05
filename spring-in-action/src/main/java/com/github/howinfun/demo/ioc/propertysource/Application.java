@@ -10,8 +10,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class Application {
 
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(PropertiesConfiguration.class);
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(PropertiesConfiguration.class,XmlConfiguration.class);
         SchoolProperties schoolProperties = applicationContext.getBean(SchoolProperties.class);
         System.out.println(schoolProperties);
+        XmlSchoolProperties xmlSchoolProperties = applicationContext.getBean(XmlSchoolProperties.class);
+        System.out.println(xmlSchoolProperties);
     }
 }
