@@ -16,12 +16,13 @@ import org.springframework.stereotype.Component;
 //         @ComponentScan(basePackages = "com.github.howinfun.demo.ioc.componentscan.color"),
 //         @ComponentScan(basePackageClasses = {Configuration.class})
 // })
-@ComponentScan(basePackageClasses = {Configuration.class}
-                                    // 指定类型为Color的组件不注入，包括子类
-                ,excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,value = Color.class),
-                                    // 指定带@Component注解的组件不注入
-                                @ComponentScan.Filter(type = FilterType.ANNOTATION,value = Component.class),
-                                // 如果父类是Color，则不注入
-                                @ComponentScan.Filter(type = FilterType.CUSTOM,value = CustomFilter.class)})
+// @ComponentScan(basePackageClasses = {Configuration.class}
+//                                     // 指定类型为Color的组件不注入，包括子类
+//                 ,excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,value = Color.class),
+//                                     // 指定带@Component注解的组件不注入
+//                                 @ComponentScan.Filter(type = FilterType.ANNOTATION,value = Component.class),
+//                                 // 如果父类是Color，则不注入
+//                                 @ComponentScan.Filter(type = FilterType.CUSTOM,value = CustomFilter.class)})
+    @ComponentScan(basePackageClasses = Configuration.class,includeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,value = Color.class)})
 public class Configuration {
 }

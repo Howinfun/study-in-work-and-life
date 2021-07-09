@@ -7,6 +7,5 @@ import org.springframework.stereotype.Component;
  * @author winfun
  * @date 2021/7/1 2:25 下午
  **/
-@Component
 public class Red extends Color{
 }
