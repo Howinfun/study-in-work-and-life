@@ -1,6 +1,5 @@
 package com.github.howinfun.demo.ioc.bean_definition;
 
-import java.util.Arrays;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -12,8 +11,16 @@ public class Application {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(BeanConfiguration.class);
         String[] beanNames = applicationContext.getBeanDefinitionNames();
-        Arrays.stream(beanNames).forEach(System.out::println);
-        Cat cat = applicationContext.getBean(Cat.class);
-        System.out.println(cat);
+        for (String beanName : beanNames) {
+            System.out.println(beanName);
+            if (beanName.contains("Cat")){
+                Cat cat = (Cat) applicationContext.getBean(beanName);
+                System.out.println(cat);
+            }
+            if (beanName.contains("Person")){
+                Person person = (Person) applicationContext.getBean(beanName);
+                System.out.println(person);
+            }
+        }
     }
 }
