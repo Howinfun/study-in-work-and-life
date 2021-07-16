@@ -29,7 +29,7 @@ public class Application {
                 .getBeanDefinition();
         context.registerBeanDefinition("myCat",catBeanDefinition);
 
-        // 注入dog，测试原型bean  ApplicationContext#refresh 方法不会初始化，即不会构建原型Bean的实例，只有当获取Bean实例时才会开始初始化。
+        // 注入dog，测试原型bean  ApplicationContext#refresh 方法执行时不会对myDog进行初始化，即不会构建原型Bean的实例，只有当获取Bean实例时才会开始初始化。
         BeanDefinition dogBeanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Dog.class)
                 .addPropertyValue("name","small dog")
                 .addPropertyReference("person","laowang")
@@ -37,12 +37,21 @@ public class Application {
                 .getBeanDefinition();
         context.registerBeanDefinition("myDog",dogBeanDefinition);
 
+        // 注入rabbit，测试延迟加载 ApplicationContext#refresh 方法执行时不会对myRabbit进行初始化，即不会构建原型Bean的实例，只有当获取Bean实例时才会开始初始化。
+        BeanDefinition rabbitBeanDefinition = BeanDefinitionBuilder.rootBeanDefinition(Rabbit.class)
+                .addPropertyValue("name","small rabbit")
+                .addPropertyReference("person","laowang")
+                .setLazyInit(true)
+                .getBeanDefinition();
+        context.registerBeanDefinition("myRabbit",rabbitBeanDefinition);
+
         // 因为没有传入配置类，需要手动刷新
         context.refresh();
         System.out.println("application context refreshed.....");
         Optional.ofNullable((Person) context.getBean("laowang")).ifPresent(System.out::println);
         Optional.ofNullable((Cat) context.getBean("myCat")).ifPresent(System.out::println);
         Optional.ofNullable((Dog) context.getBean("myDog")).ifPresent(System.out::println);
+        Optional.ofNullable((Rabbit) context.getBean("myRabbit")).ifPresent(System.out::println);
         context.close();
     }
 }
