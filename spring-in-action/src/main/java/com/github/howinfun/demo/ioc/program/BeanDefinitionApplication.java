@@ -12,7 +12,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @author winfun
  * @date 2021/7/15 9:25 上午
  **/
-public class Application {
+public class BeanDefinitionApplication {
 
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
