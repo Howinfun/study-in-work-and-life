@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @date: 2021/7/18 8:53 上午
  **/
 @Configuration
-public class JdbcConfiguration {
+public class JdbcConfigurationV1 {
 
     @Bean
     public DataSource mysqlDataSource(){

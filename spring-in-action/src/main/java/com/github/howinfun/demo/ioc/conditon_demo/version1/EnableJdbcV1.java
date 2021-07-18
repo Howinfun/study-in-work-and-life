@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Import;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(JdbcConfiguration.class)
-public @interface EnableJdbc {
+@Import(JdbcConfigurationV1.class)
+public @interface EnableJdbcV1 {
 }
