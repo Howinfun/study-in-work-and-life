@@ -15,7 +15,7 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.util.CollectionUtils;
 
 /**
- *
+ * 动态注入数据库链接
  * @author winfun
  * @date 2021/7/19 8:53 上午
  **/
@@ -23,14 +23,6 @@ public class JdbcBeanDefinitionRegistryPostProcessor implements BeanDefinitionRe
 
     private Environment environment;
 
-    /**
-     * Modify the application context's internal bean definition registry after its
-     * standard initialization. All regular bean definitions will have been loaded,
-     * but no beans will have been instantiated yet. This allows for adding further
-     * bean definitions before the next post-processing phase kicks in.
-     * @param registry the bean definition registry used by the application context
-     * @throws BeansException in case of errors
-     */
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         // 利用Spring的SPI读取支持的数据库的Driver，这里我们利用的是 loadFactoryNames 方法来读取 spring.factories 的配置
@@ -56,14 +48,6 @@ public class JdbcBeanDefinitionRegistryPostProcessor implements BeanDefinitionRe
         }
     }
 
-    /**
-     * Modify the application context's internal bean factory after its standard
-     * initialization. All bean definitions will have been loaded, but no beans
-     * will have been instantiated yet. This allows for overriding or adding
-     * properties even to eager-initializing beans.
-     * @param beanFactory the bean factory used by the application context
-     * @throws BeansException in case of errors
-     */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 
