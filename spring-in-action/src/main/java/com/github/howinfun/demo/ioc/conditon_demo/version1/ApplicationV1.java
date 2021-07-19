@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
  * @author: winfun
  * @date: 2021/7/18 8:51 上午
  **/
-@EnableJdbcV1
+@EnableJdbc
 @Configuration
 public class ApplicationV1 {
 

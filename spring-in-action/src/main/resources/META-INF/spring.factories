@@ -1,0 +1,4 @@
+com.github.howinfun.demo.ioc.conditon_demo.version3.EnableJdbc=\
+  com.mysql.cj.jdbc.Driver,\
+  oracle.jdbc.driver.OracleDriver,\
+  org.h2.Driver

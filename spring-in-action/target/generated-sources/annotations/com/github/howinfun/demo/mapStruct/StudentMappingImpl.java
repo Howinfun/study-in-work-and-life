@@ -6,7 +6,7 @@ import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-07-18T08:58:43+0800",
+    date = "2021-07-19T09:17:45+0800",
     comments = "version: 1.3.0.Final, compiler: javac, environment: Java 1.8.0_211 (Oracle Corporation)"
 )
 public class StudentMappingImpl implements StudentMapping {

@@ -30,7 +30,7 @@ public class DriverClassNameCondition implements Condition {
                 Class.forName(className);
                 return true;
             } catch (ClassNotFoundException e) {
-                System.out.println("找不多对应的Driver");
+                System.out.println("找不多对应的Driver:"+className);
                 return false;
             }
         }
