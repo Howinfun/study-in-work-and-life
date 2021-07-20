@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @RequestMapping("/dubbo")
-public class DubboShutDownController {
+public class DubboShutdownController {
 
     @GetMapping("/shutdown")
     public String shutdown(){
