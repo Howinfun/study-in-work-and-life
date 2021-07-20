@@ -20,16 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/more/version")
 public class MoreVersionHelloController {
 
-    /*@DubboReference
-    private DubboServiceOne dubboServiceOne;*/
+    @DubboReference
+    private DubboServiceOne dubboServiceOne;
     @DubboReference(version = "*")
     private DubboServiceOne dubboServiceOne2;
 
 
-    /*@GetMapping("/hello/{name}")
+    @GetMapping("/hello/{name}")
     public ApiResult sayHello(@PathVariable("name") final String name){
         return this.dubboServiceOne.sayHello(name);
-    }*/
+    }
     @GetMapping("/hello/v2/{name}")
     public ApiResult sayHelloV2(@PathVariable("name") final String name){
         return this.dubboServiceOne2.sayHello(name);
